@@ -1,88 +1,145 @@
 import { join } from "https://deno.land/std/path/mod.ts";
 import { ensureDir } from "https://deno.land/std/fs/mod.ts";
+import { DOMParser } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
 
 interface WikipediaPageInfo {
     extract: string;
     description: string;
-    birthDate?: string;
     thumbnail?: {
         source: string;
     };
-    image?: {
-        source: string;
+    content_urls?: {
+        desktop: {
+            page: string;
+        };
     };
 }
 
 interface EnrichedCelebrity {
+    id: number;
     name: string;
     date_of_birth: string;
+    date_of_death?: string;
     zodiac_sign: string;
+    gender: string;
+    nationality: string;
+    profession: string;
     biography: string;
     image_url: string;
-    profession: string;
-    nationality: string;
-    social_links: Record<string, string>;
+    social_links: string;
     famous_works: string[];
-}
-
-function getZodiacSign(dateStr: string): string {
-    const date = new Date(dateStr);
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-
-    const zodiacSigns = {
-        'Capricorn': (month === 12 && day >= 22) || (month === 1 && day <= 19),
-        'Aquarius': (month === 1 && day >= 20) || (month === 2 && day <= 18),
-        'Pisces': (month === 2 && day >= 19) || (month === 3 && day <= 20),
-        'Aries': (month === 3 && day >= 21) || (month === 4 && day <= 19),
-        'Taurus': (month === 4 && day >= 20) || (month === 5 && day <= 20),
-        'Gemini': (month === 5 && day >= 21) || (month === 6 && day <= 20),
-        'Cancer': (month === 6 && day >= 21) || (month === 7 && day <= 22),
-        'Leo': (month === 7 && day >= 23) || (month === 8 && day <= 22),
-        'Virgo': (month === 8 && day >= 23) || (month === 9 && day <= 22),
-        'Libra': (month === 9 && day >= 23) || (month === 10 && day <= 22),
-        'Scorpio': (month === 10 && day >= 23) || (month === 11 && day <= 21),
-        'Sagittarius': (month === 11 && day >= 22) || (month === 12 && day <= 21),
-    };
-
-    return Object.entries(zodiacSigns).find(([_, condition]) => condition)?.[0] || 'Unknown';
+    popularity_score: number;
+    created_at: string;
 }
 
 async function getWikipediaInfo(name: string): Promise<WikipediaPageInfo | null> {
-    const url = 'https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(name);
+    const encodedName = encodeURIComponent(name);
+    const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodedName}`;
     
     try {
         const response = await fetch(url);
+        if (!response.ok) return null;
         return await response.json();
     } catch (error) {
-        console.error(`Error fetching info for ${name}:`, error);
+        console.error(`Error fetching Wikipedia info for ${name}:`, error);
         return null;
     }
 }
 
+async function getWikipediaPageDetails(url: string): Promise<{ birthDate?: string; deathDate?: string; contentLength: number }> {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) return { contentLength: 0 };
+        
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        if (!doc) return { contentLength: 0 };
+
+        // Find birth date in the infobox (hidden span with ISO date)
+        const birthDateSpan = doc.querySelector('.bday');
+        const birthDate = birthDateSpan?.textContent;
+
+        // Find death date in the infobox (hidden span with ISO date)
+        const deathDateCell = Array.from(doc.querySelectorAll('.infobox-label'))
+            .find(el => el.textContent?.trim() === 'Died')
+            ?.nextElementSibling;
+        
+        const deathDate = deathDateCell
+            ?.querySelector('span[style="display:none"]')
+            ?.textContent
+            ?.replace(/[()]/g, ''); // Remove parentheses from (YYYY-MM-DD)
+
+        // Calculate content length as a rough popularity score
+        const contentLength = html.length;
+
+        return {
+            birthDate,
+            deathDate,
+            contentLength,
+        };
+    } catch (error) {
+        console.error(`Error fetching Wikipedia page details:`, error);
+        return { contentLength: 0 };
+    }
+}
+
+function getZodiacSign(dateStr: string): string {
+    const date = new Date(dateStr);
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return "Aries";
+    if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return "Taurus";
+    if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return "Gemini";
+    if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return "Cancer";
+    if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "Leo";
+    if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "Virgo";
+    if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return "Libra";
+    if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return "Scorpio";
+    if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return "Sagittarius";
+    if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return "Capricorn";
+    if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return "Aquarius";
+    return "Pisces";
+}
+
 async function enrichCelebrity(name: string): Promise<EnrichedCelebrity | null> {
     const info = await getWikipediaInfo(name);
-    if (!info || !info.extract) return null;
+    if (!info || !info.extract || !info.content_urls?.desktop.page) return null;
+
+    const pageDetails = await getWikipediaPageDetails(info.content_urls.desktop.page);
+    
+    if (!pageDetails.birthDate) {
+        console.warn(`No birth date found for ${name}`);
+        return null;
+    }
 
     // Use a placeholder image if none is available
     const imageUrl = info.thumbnail?.source || 'https://loremflickr.com/640/480/abstract';
 
     // Extract profession and nationality from description
-    const professionMatch = info.description?.match(/(actor|actress|singer|musician|athlete|director|producer)/i);
+    const professionMatch = info.description?.match(/(actor|actress|singer|musician|athlete|director|producer|basketball player)/i);
     const nationalityMatch = info.description?.match(/(American|British|Canadian|Australian|French|German|Italian|Mexican|Spanish|Japanese|Korean|Chinese)/i);
+
+    // Calculate normalized popularity score (0-100)
+    console.log(`Content length: ${pageDetails.contentLength}`);
+    const popularityScore = Math.min(100, Math.round((pageDetails.contentLength / 1000000) * 100));
 
     return {
         name,
-        date_of_birth: info.birthDate || new Date().toISOString().split('T')[0],
-        zodiac_sign: info.birthDate ? getZodiacSign(info.birthDate) : 'Unknown',
+        date_of_birth: pageDetails.birthDate,
+        ...(pageDetails.deathDate && { date_of_death: pageDetails.deathDate }),
+        zodiac_sign: getZodiacSign(pageDetails.birthDate),
+        gender: info.extract?.toLowerCase().includes('she ') ? 'Female' : 'Male',
+        nationality: nationalityMatch?.[1] || 'Unknown',
+        profession: professionMatch?.[1] || 'Unknown',
         biography: info.extract,
         image_url: imageUrl,
-        profession: professionMatch?.[0] || 'Unknown',
-        nationality: nationalityMatch?.[0] || 'Unknown',
-        social_links: {
-            wikipedia: `https://en.wikipedia.org/wiki/${encodeURIComponent(name)}`
-        },
-        famous_works: []
+        social_links: info.content_urls.desktop.page,
+        famous_works: [],
+        popularity_score: popularityScore,
+        created_at: new Date().toISOString(),
+        id: Math.floor(Math.random() * 1000000)
     };
 }
 
@@ -90,48 +147,33 @@ async function main() {
     const inputPath = join(Deno.cwd(), 'data', 'celebrities.json');
     const outputPath = join(Deno.cwd(), 'data', 'enriched_celebrities.json');
     
-    if (!await Deno.stat(inputPath).catch(() => false)) {
-        console.error('Please run fetch_celebrities.ts first to generate the input file');
-        Deno.exit(1);
-    }
+    await ensureDir(join(Deno.cwd(), 'data'));
 
-    const fileContent = await Deno.readTextFile(inputPath);
-    const celebrities = JSON.parse(fileContent);
-    const enrichedCelebrities: EnrichedCelebrity[] = [];
-    
-    // Process celebrities in batches to avoid rate limiting
-    const BATCH_SIZE = 10;
-    for (let i = 0; i < celebrities.length; i += BATCH_SIZE) {
-        const batch = celebrities.slice(i, i + BATCH_SIZE);
-        console.log(`Processing batch ${i / BATCH_SIZE + 1}/${Math.ceil(celebrities.length / BATCH_SIZE)}`);
-        
-        const enrichedBatch = await Promise.all(
-            batch.map(async (name: string) => {
-                const enriched = await enrichCelebrity(name);
-                if (enriched) {
-                    console.log(`Successfully enriched data for ${name}`);
-                    return enriched;
-                }
-                console.log(`Failed to enrich data for ${name}`);
-                return null;
-            })
-        );
+    try {
+        const rawData = await Deno.readTextFile(inputPath);
+        const celebrities: string[] = JSON.parse(rawData);
+        const enrichedCelebrities: EnrichedCelebrity[] = [];
 
-        enrichedCelebrities.push(...enrichedBatch.filter((c): c is EnrichedCelebrity => c !== null));
-        
-        // Save progress after each batch
-        await ensureDir(join(Deno.cwd(), 'data'));
+        for (const celebrity of celebrities) {
+            console.log(`Processing ${celebrity}...`);
+            const enriched = await enrichCelebrity(celebrity);
+            if (enriched) {
+                enrichedCelebrities.push(enriched);
+                // Add a small delay to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
+
         await Deno.writeTextFile(
             outputPath,
             JSON.stringify(enrichedCelebrities, null, 2)
         );
-        
-        // Wait a bit between batches to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 1000));
-    }
 
-    console.log(`Enriched ${enrichedCelebrities.length} celebrities`);
-    console.log(`Data saved to ${outputPath}`);
+        console.log(`Enriched ${enrichedCelebrities.length} celebrities`);
+        console.log(`Data saved to ${outputPath}`);
+    } catch (error) {
+        console.error('Error processing celebrities:', error);
+    }
 }
 
 if (import.meta.main) {
