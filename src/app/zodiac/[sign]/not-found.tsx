@@ -9,7 +9,7 @@ export default function NotFound() {
           Invalid Zodiac Sign
         </h2>
         <p className="text-gray-600 mb-8">
-          The zodiac sign you're looking for doesn't exist.
+          The zodiac sign you&apos;re looking for doesn&apos;t exist.
         </p>
         <Link
           href="/"

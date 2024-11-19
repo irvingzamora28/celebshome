@@ -15,6 +15,23 @@ export interface ICelebrity {
     updatedAt: string;
 }
 
+interface DatabaseRow {
+    id: number;
+    name: string;
+    date_of_birth: string;
+    date_of_death?: string;
+    zodiac_sign: string;
+    gender: string;
+    nationality: string;
+    profession: string;
+    biography: string;
+    image_url: string;
+    popularity_score: number;
+    additional_data?: string;
+    created_at: string;
+    updated_at: string;
+}
+
 export class Celebrity implements ICelebrity {
     id: number;
     name: string;
@@ -48,7 +65,7 @@ export class Celebrity implements ICelebrity {
         this.updatedAt = data.updatedAt;
     }
 
-  static fromDatabaseRow(row: any): Celebrity {
+    static fromDatabaseRow(row: DatabaseRow): Celebrity {
         return new Celebrity({
             id: row.id,
             name: row.name,
