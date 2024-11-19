@@ -120,11 +120,11 @@ export default async function CelebrityProfile({ params }: PageProps) {
             )}
 
             {/* Career Highlights */}
-            {celebrity.careerHighlights && (
+            {(celebrity.additionalData?.careerHighlights as string[]) && (
               <div className="space-y-2">
                 <h2 className="text-lg font-semibold text-indigo-900">Career Highlights</h2>
                 <ul className="list-disc list-inside text-gray-600 space-y-1">
-                  {celebrity.careerHighlights.map((highlight, index) => (
+                  {(celebrity.additionalData?.careerHighlights as string[])?.map((highlight, index) => (
                     <li key={index}>{highlight}</li>
                   ))}
                 </ul>

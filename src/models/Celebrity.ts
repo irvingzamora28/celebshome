@@ -2,7 +2,7 @@ export interface ICelebrity {
     id: number;
     name: string;
     dateOfBirth: string;
-    dateOfDeath?: string;
+    dateOfDeath?: string | null;
     zodiacSign: string;
     gender: string;
     nationality: string;
@@ -15,11 +15,11 @@ export interface ICelebrity {
     updatedAt: string;
 }
 
-interface DatabaseRow {
+export interface DatabaseRow {
     id: number;
     name: string;
     date_of_birth: string;
-    date_of_death?: string;
+    date_of_death?: string | null;
     zodiac_sign: string;
     gender: string;
     nationality: string;
@@ -36,7 +36,7 @@ export class Celebrity implements ICelebrity {
     id: number;
     name: string;
     dateOfBirth: string;
-    dateOfDeath?: string;
+    dateOfDeath?: string | null;
     zodiacSign: string;
     gender: string;
     nationality: string;
@@ -70,7 +70,7 @@ export class Celebrity implements ICelebrity {
             id: row.id,
             name: row.name,
             dateOfBirth: row.date_of_birth,
-            dateOfDeath: row.date_of_death,
+            dateOfDeath: row.date_of_death || null,
             zodiacSign: row.zodiac_sign,
             gender: row.gender,
             nationality: row.nationality,
