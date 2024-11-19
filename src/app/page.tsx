@@ -1,20 +1,28 @@
-import ZodiacGrid from '@/components/ZodiacGrid';
-import FeaturedCelebrities from '@/components/FeaturedCelebrities';
-import SearchBar from '@/components/SearchBar';
-import { ICelebrity } from '@/models/Celebrity';
+import ZodiacGrid from "@/components/ZodiacGrid";
+import FeaturedCelebrities from "@/components/FeaturedCelebrities";
+import SearchBar from "@/components/SearchBar";
+import { ICelebrity } from "@/models/Celebrity";
 
 async function getFeaturedCelebrities(): Promise<ICelebrity[]> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-  const response = await fetch(`${baseUrl}/api/celebrities/featured`, {
-    cache: 'force-cache', // Enable caching
-    next: { revalidate: 3600 }, // Revalidate once every hour
-  });
-  
-  if (!response.ok) {
-    throw new Error('Failed to fetch featured celebrities');
+
+  try {
+    const response = await fetch(`${baseUrl}/api/celebrities/featured`, {
+      cache: "force-cache",
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch featured celebrities");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching featured celebrities:", error);
+    return []; // Fallback to an empty array
   }
-  return response.json();
 }
+
 
 export default async function Home() {
   const featuredCelebrities = await getFeaturedCelebrities();
@@ -31,7 +39,8 @@ export default async function Home() {
             Celebrity Zodiac Signs
           </h1>
           <p className="text-xl text-indigo-600 max-w-2xl mx-auto">
-            Explore the cosmic connections of your favorite celebrities through their zodiac signs
+            Explore the cosmic connections of your favorite celebrities through
+            their zodiac signs
           </p>
         </header>
 
@@ -67,9 +76,9 @@ export default async function Home() {
 }
 
 export const metadata = {
-  title: 'Celebrity Zodiac Signs | Cosmic Connections',
-  description: 'Discover and explore celebrities through their zodiac signs',
+  title: "Celebrity Zodiac Signs | Cosmic Connections",
+  description: "Discover and explore celebrities through their zodiac signs",
   icons: {
-    icon: '/favicon.ico',
+    icon: "/favicon.ico",
   },
 };
