@@ -1,5 +1,6 @@
-import ZodiacGrid from '../components/ZodiacGrid';
-import FeaturedCelebrities from '../components/FeaturedCelebrities';
+import ZodiacGrid from '@/components/ZodiacGrid';
+import FeaturedCelebrities from '@/components/FeaturedCelebrities';
+import SearchBar from '@/components/SearchBar';
 import { ICelebrity } from '@/models/Celebrity';
 
 async function getFeaturedCelebrities(): Promise<ICelebrity[]> {
@@ -32,6 +33,11 @@ export default async function Home() {
             Explore the cosmic connections of your favorite celebrities through their zodiac signs
           </p>
         </header>
+
+        {/* Search Section */}
+        <section className="mb-16">
+          <SearchBar />
+        </section>
 
         {/* Zodiac Grid Section */}
         <section className="mb-16">
