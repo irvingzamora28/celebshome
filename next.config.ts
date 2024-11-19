@@ -18,6 +18,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Enable static exports for better performance
+  output: 'standalone',
 };
 
 export default nextConfig;
