@@ -1,36 +1,161 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Celebrity Zodiac Web Application
 
-## Getting Started
+A modern web application that showcases and organizes celebrities by their zodiac signs. Built with Next.js 15, TypeScript, Tailwind CSS, and SQLite.
 
-First, run the development server:
+## Features
 
+- Browse celebrities by zodiac signs
+- View featured celebrities
+- Search celebrities by name or profession
+- Responsive design with modern UI
+- Efficient database querying and caching
+- Type-safe data handling
+
+## Tech Stack
+
+- **Frontend:**
+  - Next.js 15 (with React 19 RC)
+  - TypeScript
+  - Tailwind CSS
+  - Next.js Image Component
+
+- **Backend:**
+  - SQLite3
+  - Node.js
+  - Next.js API Routes
+
+- **Data Processing:**
+  - Deno Runtime
+  - Deno SQLite
+  - Deno Standard Modules
+
+## Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+- SQLite3
+- Deno (v1.37 or higher)
+
+## Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yourusername/celebshome.git
+cd celebshome
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install && deno install
+# or
+yarn install && deno install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables:
+```bash
+cp .env.example .env
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Edit `.env` file and set your configuration:
+```
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
 
-## Learn More
+## Data Processing and Database Setup
 
-To learn more about Next.js, take a look at the following resources:
+### 1. Fetch Initial Celebrity Data
+```bash
+deno run --allow-net --allow-write scripts/fetch_celebrities.ts
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Enrich Celebrity Data
+```bash
+deno run --allow-net --allow-write --allow-read scripts/enrich_celebrity_data.ts
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3. Initialize Database with Enriched Data
+```bash
+deno run --allow-read --allow-write --allow-net --unstable scripts/db_init.ts data/enriched_celebrities.json
+```
 
-## Deploy on Vercel
+### 4. Update Database with New Data
+```bash
+deno run --allow-read --allow-write scripts/db_update.ts data/enriched_celebrities.json
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Database Schema
+```sql
+CREATE TABLE celebrities (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    date_of_birth TEXT NOT NULL,
+    zodiac_sign TEXT NOT NULL,
+    profession TEXT NOT NULL,
+    nationality TEXT NOT NULL,
+    image_url TEXT NOT NULL,
+    popularity_score INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Running the Application
+
+1. Start the development server:
+```bash
+deno task dev
+```
+
+2. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Project Structure
+
+```
+celebshome/
+├── src/
+│   ├── app/              # Next.js app directory
+│   ├── components/       # React components
+│   ├── models/          # Data models
+│   ├── services/        # Service layer
+│   └── controllers/     # Controllers
+├── scripts/            # Deno scripts for data processing
+│   ├── fetch_celebrities.ts
+│   ├── enrich_celebrity_data.ts
+│   ├── db_init.ts
+│   └── db_update.ts
+├── public/            # Static files
+└── data/             # JSON data and database files
+    └── enriched_celebrities.json
+```
+
+## Data Processing Flow
+
+1. `fetch_celebrities.ts`: Fetches initial celebrity data from various sources
+2. `enrich_celebrity_data.ts`: Adds additional information to the celebrity data
+3. `db_init.ts`: Creates and populates the SQLite database
+4. `db_update.ts`: Updates existing records with new data
+
+## API Routes
+
+- `GET /api/celebrities/featured` - Get featured celebrities
+- `GET /api/celebrities/zodiac/:sign` - Get celebrities by zodiac sign
+- `GET /api/celebrities/search` - Search celebrities
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Next.js team for the amazing framework
+- Tailwind CSS for the utility-first CSS framework
+- SQLite for the reliable database engine
+- Deno team for the modern runtime
