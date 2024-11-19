@@ -45,7 +45,7 @@ export default function SearchBar() {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setShowResults(true)}
           placeholder="Search celebrities..."
-          className="w-full px-6 py-4 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border-2 border-indigo-100 focus:border-indigo-300 focus:ring-2 focus:ring-indigo-200 focus:outline-none transition-all text-lg"
+          className="w-full px-6 py-4 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border-2 border-indigo-100 focus:border-indigo-300 focus:ring-2 focus:ring-indigo-200 focus:outline-none transition-all text-lg text-slate-600"
         />
         {isLoading && (
           <div className="absolute right-4 top-1/2 -translate-y-1/2">
@@ -65,7 +65,7 @@ export default function SearchBar() {
               {results.map((celebrity) => (
                 <Link
                   key={celebrity.id}
-                  href={`/zodiac/${celebrity.zodiacSign.toLowerCase()}`}
+                  href={`/celebrity/${encodeURIComponent(celebrity.name)}-${encodeURIComponent(celebrity.dateOfBirth)}`}
                   className="flex items-center gap-4 p-3 hover:bg-indigo-50 rounded-xl transition-colors"
                   onClick={() => setShowResults(false)}
                 >

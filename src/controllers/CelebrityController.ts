@@ -34,4 +34,13 @@ export class CelebrityController {
             throw new Error("Failed to search celebrities");
         }
     }
+
+    async getCelebrityBySlug(slug: string): Promise<Celebrity | null> {
+        try {
+            return await this.dbService.getCelebrityBySlug(slug);
+        } catch (error) {
+            console.error(`Error fetching celebrity by slug ${slug}:`, error);
+            throw new Error(`Failed to fetch celebrity by slug ${slug}`);
+        }
+    }
 }

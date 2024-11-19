@@ -80,4 +80,35 @@ export class DatabaseService {
       });
     });
   }
+
+  public async getCelebrityBySlug(slug: string): Promise<Celebrity | null> {
+    return new Promise((resolve, reject) => {
+        console.log(`Searching for celebrity with slug: ${slug}`);
+        
+      // Find the last occurrence of '-' to separate name and birth date
+      const [name] = slug.split('-').map(part => part.replace(/-/g, ' '));
+      const birthDateMatch = slug.match(/\d{4}-\d{2}-\d{2}/);
+      if (!birthDateMatch) {
+        reject(new Error(`Invalid slug format: ${slug}`));
+        return;
+      }
+      const birthDate = birthDateMatch[0];
+      
+      console.log(`Searching for celebrity with name: ${name} and birth date: ${birthDate}`);
+      
+      const query = `
+        SELECT * FROM celebrities 
+        WHERE name = ? AND date_of_birth = ?
+      `;
+      
+      this.db.get(query, [name, birthDate], (err, row) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        const celebrity = row ? Celebrity.fromDatabaseRow(row) : null;
+        resolve(celebrity);
+      });
+    });
+  }
 }

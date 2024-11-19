@@ -127,9 +127,10 @@ export default function ZodiacClientPage({ sign, celebrities }: ZodiacClientPage
                   type="text"
                   id="search"
                   placeholder="Search celebrities..."
+                  autoComplete='off'
                   value={filters.search}
                   onChange={(e) => handleFilterChange('search', e.target.value)}
-                  className="flex-grow px-4 py-3 border-2 border-indigo-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none transition-all"
+                  className="flex-grow px-4 py-3 border-2 border-indigo-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none transition-all text-slate-600"
                 />
                 <button 
                   onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
@@ -188,9 +189,14 @@ export default function ZodiacClientPage({ sign, celebrities }: ZodiacClientPage
         </div>
 
         {/* Celebrity Grid */}
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-  {filteredCelebrities.map((celebrity) => (
-    <div
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {filteredCelebrities.map((celebrity) => (
+            <Link
+              key={celebrity.id}
+              href={`/celebrity/${encodeURIComponent(celebrity.name)}-${encodeURIComponent(celebrity.dateOfBirth)}`}
+              className="block"
+            >
+              <div
       key={celebrity.id}
       className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden flex flex-col items-center"
     >
@@ -216,9 +222,9 @@ export default function ZodiacClientPage({ sign, celebrities }: ZodiacClientPage
         </p>
       </div>
     </div>
-  ))}
-</div>
-
+            </Link>
+          ))}
+        </div>
 
         {/* No Results */}
         {filteredCelebrities.length === 0 && (
