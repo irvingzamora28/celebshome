@@ -1,15 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { CelebrityController } from "@/controllers/CelebrityController";
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
 
-export async function GET(
-  request: Request,
-  { params }: { params: { sign: string } }
-) {
-  const { sign } = params;
+export async function GET(req: NextRequest) {
+  // Extract "sign" from the URL pathname
+  const sign = req.nextUrl.pathname.split("/").pop()?.toLowerCase();
 
   const validSigns = [
     "aries",
@@ -26,21 +24,25 @@ export async function GET(
     "pisces",
   ];
 
-  if (!validSigns.includes(sign.toLowerCase())) {
+  if (!sign || !validSigns.includes(sign)) {
     return NextResponse.json({ error: "Invalid zodiac sign" }, { status: 400 });
   }
 
   try {
     const controller = new CelebrityController();
     // Capitalize the first letter of the zodiac sign to match database format
-    const celebrities = await controller.getCelebritiesByZodiac(capitalizeFirstLetter(sign));
-    
+    const celebrities = await controller.getCelebritiesByZodiac(
+      capitalizeFirstLetter(sign)
+    );
+
     if (!celebrities || celebrities.length === 0) {
       console.log(`No celebrities found for zodiac sign ${sign}`);
     } else {
-      console.log(`Found ${celebrities.length} celebrities for zodiac sign ${sign}`);
+      console.log(
+        `Found ${celebrities.length} celebrities for zodiac sign ${sign}`
+      );
     }
-    
+
     return NextResponse.json(celebrities);
   } catch (error) {
     console.error(`Error fetching celebrities for zodiac sign ${sign}:`, error);
