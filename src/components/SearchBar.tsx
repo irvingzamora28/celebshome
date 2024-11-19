@@ -69,11 +69,12 @@ export default function SearchBar() {
                   className="flex items-center gap-4 p-3 hover:bg-indigo-50 rounded-xl transition-colors"
                   onClick={() => setShowResults(false)}
                 >
-                  <div className="relative w-12 h-12 flex-shrink-0">
+                  <div className="relative w-12 h-12 h flex-shrink-0">
                     <Image
                       src={celebrity.imageUrl}
                       alt={celebrity.name}
                       fill
+                      sizes="48px"
                       className="object-cover rounded-full"
                     />
                   </div>
