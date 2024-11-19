@@ -4,15 +4,13 @@ import Link from 'next/link';
 import { ICelebrity } from '@/models/Celebrity';
 
 interface PageProps {
-  params: {
-    slug: string;
-  };
+  params: Promise<{ slug: string }>;
 }
 
 async function getCelebrityProfile(slug: string): Promise<ICelebrity> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
   const response = await fetch(`${baseUrl}/api/celebrities/profile/${slug}`, {
-    cache: 'no-store'
+    cache: 'force-cache', // Enable caching
   });
 
   if (!response.ok) {
@@ -35,9 +33,13 @@ function getZodiacEmoji(sign: string): string {
 }
 
 export default async function CelebrityProfile({ params }: PageProps) {
-  console.log(`Fetching celebrity profile for ${params.slug}`);
+  // Await the `params` object
+  const resolvedParams = await params;
+  const { slug } = resolvedParams;
+
+  console.log(`Fetching celebrity profile for ${slug}`);
   
-  const celebrity = await getCelebrityProfile(params.slug);
+  const celebrity = await getCelebrityProfile(slug);
   const birthDate = new Date(celebrity.dateOfBirth);
 
   return (
@@ -134,11 +136,3 @@ export default async function CelebrityProfile({ params }: PageProps) {
     </main>
   );
 }
-
-export const metadata = {
-  title: 'Celebrity Profile | Cosmic Connections',
-  description: 'Explore detailed celebrity profiles and their zodiac signs',
-  icons: {
-    icon: '/favicon.ico',
-  },
-};

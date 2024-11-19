@@ -206,6 +206,7 @@ export default function ZodiacClientPage({ sign, celebrities }: ZodiacClientPage
           src={celebrity.imageUrl}
           alt={celebrity.name}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           className="object-cover rounded-full border-4 border-indigo-200"
           style={{ objectPosition: 'center' }}
         />

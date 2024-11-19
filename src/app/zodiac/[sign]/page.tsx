@@ -2,9 +2,7 @@ import { notFound } from 'next/navigation';
 import ZodiacClientPage from './ZodiacClientPage';
 
 interface PageProps {
-  params: {
-    sign: string;
-  };
+  params: Promise<{ sign: string }>; // Updated to Promise
 }
 
 async function getCelebritiesByZodiac(sign: string) {
@@ -25,14 +23,30 @@ async function getCelebritiesByZodiac(sign: string) {
 }
 
 export default async function ZodiacPage({ params }: PageProps) {
-  const sign = params.sign.toLowerCase();
-  const validSigns = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'];
-  
+  // Await the params object
+  const resolvedParams = await params;
+  const sign = resolvedParams.sign.toLowerCase();
+
+  const validSigns = [
+    'aries',
+    'taurus',
+    'gemini',
+    'cancer',
+    'leo',
+    'virgo',
+    'libra',
+    'scorpio',
+    'sagittarius',
+    'capricorn',
+    'aquarius',
+    'pisces',
+  ];
+
   if (!validSigns.includes(sign)) {
     notFound();
   }
 
   const celebrities = await getCelebritiesByZodiac(sign);
-  
+
   return <ZodiacClientPage sign={sign} celebrities={celebrities} />;
 }
