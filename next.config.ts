@@ -1,7 +1,8 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: 'standalone',
+  distDir: '.next',
   images: {
     remotePatterns: [
       {
@@ -12,14 +13,15 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'upload.wikimedia.org',
+        hostname: 'picsum.photos',
         port: '',
         pathname: '/**',
       },
     ],
   },
-  // Enable static exports for better performance
-  output: 'standalone',
-};
+  experimental: {
+    typedRoutes: true,
+  },
+}
 
-export default nextConfig;
+export default nextConfig
