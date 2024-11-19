@@ -11,6 +11,7 @@ async function getCelebritiesByZodiac(sign: string) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
   const response = await fetch(`${baseUrl}/api/celebrities/zodiac/${sign}`, {
     cache: 'force-cache', // Enable caching
+    next: { revalidate: 3600 }, // Revalidate once every hour
   });
 
   if (!response.ok) {
