@@ -10,16 +10,16 @@ interface PageProps {
 async function getCelebritiesByZodiac(sign: string) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
   const response = await fetch(`${baseUrl}/api/celebrities/zodiac/${sign}`, {
-    cache: 'no-store'  // Disable caching to always get fresh data
+    cache: 'force-cache', // Enable caching
   });
-  
+
   if (!response.ok) {
     if (response.status === 400) {
       notFound();
     }
     throw new Error('Failed to fetch celebrities');
   }
-  
+
   return response.json();
 }
 

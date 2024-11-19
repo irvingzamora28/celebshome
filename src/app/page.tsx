@@ -6,7 +6,7 @@ import { ICelebrity } from '@/models/Celebrity';
 async function getFeaturedCelebrities(): Promise<ICelebrity[]> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const response = await fetch(`${baseUrl}/api/celebrities/featured`, {
-    cache: 'no-store'
+    cache: 'force-cache', // Enable caching
   });
   
   if (!response.ok) {
