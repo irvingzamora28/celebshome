@@ -1,4 +1,4 @@
-import { DB } from "https://deno.land/x/sqlite@v3.8/mod.ts";
+import { DB } from "https://deno.land/x/sqlite/mod.ts";
 import { join } from "https://deno.land/std/path/mod.ts";
 
 // Use an absolute path for the database file
@@ -35,7 +35,6 @@ async function updateCelebrities(jsonFilePath: string) {
         for (const celeb of celebrities) {
             const now = new Date().toISOString();
             
-            // Separate core fields from additional data
             const {
                 name, date_of_birth, date_of_death, zodiac_sign,
                 gender, nationality, profession, biography,
@@ -44,7 +43,9 @@ async function updateCelebrities(jsonFilePath: string) {
             } = celeb;
 
             try {
-                const result = updateStmt.execute({
+                console.log(`Updating ${name}... and date of birth ${date_of_birth}`);
+                
+                updateStmt.execute({
                     name,
                     date_of_birth,
                     date_of_death: date_of_death || null,
@@ -59,7 +60,8 @@ async function updateCelebrities(jsonFilePath: string) {
                     updated_at: now,
                 });
 
-                if (result.affectedRows > 0) {
+                // Use `db.totalChanges` to count affected rows
+                if (db.totalChanges > 0) {
                     updated++;
                     if (updated % 10 === 0) {
                         console.log(`Updated ${updated} celebrities...`);
@@ -80,6 +82,7 @@ async function updateCelebrities(jsonFilePath: string) {
         db.close();
     }
 }
+
 
 // Check if file path is provided
 if (Deno.args.length < 1) {
