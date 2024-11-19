@@ -7,40 +7,39 @@ interface FeaturedCelebritiesProps {
 
 export default function FeaturedCelebrities({ celebrities }: FeaturedCelebritiesProps) {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {celebrities.map((celebrity) => (
                 <div
                     key={celebrity.id}
-                    className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                    className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl overflow-hidden transition-all duration-300 transform hover:-translate-y-2"
                 >
-                    <div className="relative h-48 w-full">
+                    <div className="relative aspect-video">
                         <Image
                             src={celebrity.imageUrl}
                             alt={celebrity.name}
                             fill
-                            className="object-cover"
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                     </div>
-                    <div className="p-4">
-                        <div className="flex items-center justify-between mb-2">
-                            <h3 className="text-xl font-semibold text-gray-800">
+                    <div className="p-6">
+                        <div className="flex items-center justify-between mb-3">
+                            <h3 className="text-xl font-bold text-indigo-900">
                                 {celebrity.name}
                             </h3>
-                            <span className="text-2xl" title={celebrity.zodiacSign}>
+                            <span className="text-3xl" title={celebrity.zodiacSign}>
                                 {getZodiacEmoji(celebrity.zodiacSign)}
                             </span>
                         </div>
-                        <p className="text-gray-600 text-sm mb-2">
-                            {celebrity.profession}
+                        <p className="text-indigo-600 text-sm mb-2 font-medium">
+                            {celebrity.profession === 'Unknown' ? '' : celebrity.profession}
                         </p>
-                        <p className="text-gray-700 text-sm line-clamp-2">
+                        <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                             {celebrity.biography}
                         </p>
-                        <div className="mt-4 flex items-center justify-between">
+                        <div className="flex items-center justify-between">
                             <span className="text-sm text-gray-500">
-                                {new Date(celebrity.dateOfBirth).toLocaleDateString()}
+                                Born: {new Date(celebrity.dateOfBirth).toLocaleDateString()}
                             </span>
-                            
                         </div>
                     </div>
                 </div>
@@ -51,18 +50,9 @@ export default function FeaturedCelebrities({ celebrities }: FeaturedCelebrities
 
 function getZodiacEmoji(sign: string): string {
     const zodiacEmojis: { [key: string]: string } = {
-        'Aries': '♈',
-        'Taurus': '♉',
-        'Gemini': '♊',
-        'Cancer': '♋',
-        'Leo': '♌',
-        'Virgo': '♍',
-        'Libra': '♎',
-        'Scorpio': '♏',
-        'Sagittarius': '♐',
-        'Capricorn': '♑',
-        'Aquarius': '♒',
-        'Pisces': '♓'
+        'Aries': '♈', 'Taurus': '♉', 'Gemini': '♊', 'Cancer': '♋', 
+        'Leo': '♌', 'Virgo': '♍', 'Libra': '♎', 'Scorpio': '♏', 
+        'Sagittarius': '♐', 'Capricorn': '♑', 'Aquarius': '♒', 'Pisces': '♓'
     };
     return zodiacEmojis[sign] || '⭐';
 }

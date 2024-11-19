@@ -17,21 +17,23 @@ const zodiacSigns = [
 
 export default function ZodiacGrid() {
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {zodiacSigns.map((sign) => (
                 <Link
                     key={sign.name}
                     href={`/zodiac/${sign.name.toLowerCase()}`}
-                    className="group bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                    className="group bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-6"
                 >
                     <div className="text-center">
-                        <div className="text-4xl mb-2 group-hover:scale-110 transition-transform duration-300">
+                        <div className="text-5xl mb-3 transition-transform duration-300 group-hover:scale-110">
                             {sign.emoji}
                         </div>
-                        <h3 className="text-xl font-semibold text-gray-800 mb-1">
+                        <h3 className="text-xl font-bold text-indigo-900 mb-2">
                             {sign.name}
                         </h3>
-                        <p className="text-sm text-gray-600">{sign.period}</p>
+                        <p className="text-sm text-indigo-600 font-medium">
+                            {sign.period}
+                        </p>
                     </div>
                 </Link>
             ))}

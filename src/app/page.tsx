@@ -5,7 +5,7 @@ import { ICelebrity } from '@/models/Celebrity';
 async function getFeaturedCelebrities(): Promise<ICelebrity[]> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const response = await fetch(`${baseUrl}/api/celebrities/featured`, {
-    cache: 'no-store'  // Disable caching to always get fresh data
+    cache: 'no-store'
   });
   
   if (!response.ok) {
@@ -18,31 +18,51 @@ export default async function Home() {
   const featuredCelebrities = await getFeaturedCelebrities();
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-      <div className="container mx-auto px-4 py-8">
-        <header className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+    <main className="min-h-screen bg-gradient-to-b from-indigo-50 to-indigo-100">
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        {/* Hero Section */}
+        <header className="text-center mb-16 space-y-6">
+          <div className="inline-block bg-indigo-100 px-4 py-2 rounded-full text-indigo-800 text-sm font-medium">
+            Discover Your Celestial Connections
+          </div>
+          <h1 className="text-5xl md:text-6xl font-extrabold text-indigo-900 leading-tight">
             Celebrity Zodiac Signs
           </h1>
-          <p className="text-xl text-gray-600">
-            Discover your favorite celebrities by their zodiac signs
+          <p className="text-xl text-indigo-600 max-w-2xl mx-auto">
+            Explore the cosmic connections of your favorite celebrities through their zodiac signs
           </p>
         </header>
 
-        <section className="mb-12">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-            Browse by Zodiac Sign
-          </h2>
+        {/* Zodiac Grid Section */}
+        <section className="mb-16">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl font-bold text-indigo-900">
+              Browse by Zodiac Sign
+            </h2>
+            <div className="h-0.5 bg-indigo-200 flex-grow ml-6"></div>
+          </div>
           <ZodiacGrid />
         </section>
 
+        {/* Featured Celebrities Section */}
         <section>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-            Featured Celebrities
-          </h2>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl font-bold text-indigo-900">
+              Featured Celebrities
+            </h2>
+            <div className="h-0.5 bg-indigo-200 flex-grow ml-6"></div>
+          </div>
           <FeaturedCelebrities celebrities={featuredCelebrities} />
         </section>
       </div>
     </main>
   );
 }
+
+export const metadata = {
+  title: 'Celebrity Zodiac Signs | Cosmic Connections',
+  description: 'Discover and explore celebrities through their zodiac signs',
+  icons: {
+    icon: '/favicon.ico',
+  },
+};
