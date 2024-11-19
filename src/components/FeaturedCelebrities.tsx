@@ -1,8 +1,8 @@
+import { ICelebrity } from '@/models/Celebrity';
 import Image from 'next/image';
-import { Celebrity } from '../types/celebrity';
 
 interface FeaturedCelebritiesProps {
-    celebrities: Celebrity[];
+    celebrities: ICelebrity[];
 }
 
 export default function FeaturedCelebrities({ celebrities }: FeaturedCelebritiesProps) {
@@ -15,7 +15,7 @@ export default function FeaturedCelebrities({ celebrities }: FeaturedCelebrities
                 >
                     <div className="relative h-48 w-full">
                         <Image
-                            src={celebrity.image_url}
+                            src={celebrity.imageUrl}
                             alt={celebrity.name}
                             fill
                             className="object-cover"
@@ -26,8 +26,8 @@ export default function FeaturedCelebrities({ celebrities }: FeaturedCelebrities
                             <h3 className="text-xl font-semibold text-gray-800">
                                 {celebrity.name}
                             </h3>
-                            <span className="text-2xl" title={celebrity.zodiac_sign}>
-                                {getZodiacEmoji(celebrity.zodiac_sign)}
+                            <span className="text-2xl" title={celebrity.zodiacSign}>
+                                {getZodiacEmoji(celebrity.zodiacSign)}
                             </span>
                         </div>
                         <p className="text-gray-600 text-sm mb-2">
@@ -38,21 +38,9 @@ export default function FeaturedCelebrities({ celebrities }: FeaturedCelebrities
                         </p>
                         <div className="mt-4 flex items-center justify-between">
                             <span className="text-sm text-gray-500">
-                                {new Date(celebrity.date_of_birth).toLocaleDateString()}
+                                {new Date(celebrity.dateOfBirth).toLocaleDateString()}
                             </span>
-                            <div className="flex space-x-2">
-                                {Object.entries(JSON.parse(celebrity.social_links)).map(([platform, link]) => (
-                                    <a
-                                        key={platform}
-                                        href={String(link)}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-600 hover:text-blue-800"
-                                    >
-                                        {platform}
-                                    </a>
-                                ))}
-                            </div>
+                            
                         </div>
                     </div>
                 </div>

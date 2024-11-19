@@ -1,8 +1,22 @@
 import ZodiacGrid from '../components/ZodiacGrid';
 import FeaturedCelebrities from '../components/FeaturedCelebrities';
-import { sampleCelebrities } from '../types/celebrity';
+import { ICelebrity } from '@/models/Celebrity';
 
-export default function Home() {
+async function getFeaturedCelebrities(): Promise<ICelebrity[]> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const response = await fetch(`${baseUrl}/api/celebrities/featured`, {
+    cache: 'no-store'  // Disable caching to always get fresh data
+  });
+  
+  if (!response.ok) {
+    throw new Error('Failed to fetch featured celebrities');
+  }
+  return response.json();
+}
+
+export default async function Home() {
+  const featuredCelebrities = await getFeaturedCelebrities();
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="container mx-auto px-4 py-8">
@@ -26,7 +40,7 @@ export default function Home() {
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">
             Featured Celebrities
           </h2>
-          <FeaturedCelebrities celebrities={sampleCelebrities} />
+          <FeaturedCelebrities celebrities={featuredCelebrities} />
         </section>
       </div>
     </main>
