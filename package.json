@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run build:scripts && next build && npm run db:init",
+    "build": "npm run build:scripts && npm run db:init && next build",
     "vercel-build": "next build",
     "build:scripts": "tsc -p tsconfig.scripts.json",
     "start": "next start",
