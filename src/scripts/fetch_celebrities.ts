@@ -1,6 +1,9 @@
-import { join } from "https://deno.land/std/path/mod.ts";
-import { ensureDir } from "https://deno.land/std/fs/mod.ts";
-import { CATEGORIES } from "./categories.ts";
+import path from 'path';
+import fs from 'fs/promises';
+
+const CATEGORIES = [
+    "Category:Lists of actors by nationality"
+];
 
 interface WikipediaResponse {
     query: {
@@ -24,23 +27,26 @@ async function getCategoryMembers(category: string): Promise<string[]> {
     let pageCount = 0;
 
     while (pageCount < MAX_PAGES) {
-        const url = 'https://en.wikipedia.org/w/api.php';
-        const params = new URLSearchParams({
+        const url = new URL('https://en.wikipedia.org/w/api.php');
+        url.search = new URLSearchParams({
             action: 'query',
             list: 'categorymembers',
             cmtitle: category,
             cmlimit: ITEMS_PER_PAGE.toString(),
             format: 'json',
             origin: '*'
-        });
+        }).toString();
 
         if (continueToken) {
-            params.append('cmcontinue', continueToken);
+            url.searchParams.append('cmcontinue', continueToken);
         }
 
         try {
-            const response = await fetch(`${url}?${params}`);
-            const data: WikipediaResponse = await response.json();
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json() as WikipediaResponse;
             
             const members = data.query.categorymembers.map(member => member.title);
             allMembers.push(...members);
@@ -66,21 +72,24 @@ async function getCategoryMembers(category: string): Promise<string[]> {
 }
 
 async function getPageContent(title: string): Promise<string[]> {
-    const url = 'https://en.wikipedia.org/w/api.php';
-    const params = new URLSearchParams({
+    const url = new URL('https://en.wikipedia.org/w/api.php');
+    url.search = new URLSearchParams({
         action: 'query',
         prop: 'links',
         titles: title,
         pllimit: '500',
         format: 'json',
         origin: '*'
-    });
+    }).toString();
 
     try {
-        const response = await fetch(`${url}?${params}`);
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
-        const pages = Object.values(data.query.pages);
-        const links = pages[0].links?.map((link: { title: string }) => link.title) || [];
+        const pages = Object.values(data.query.pages) as Array<{ links?: Array<{ title: string }> }>;
+        const links = pages[0]?.links?.map(link => link.title) || [];
         return links.filter((link: string) => !link.includes(':') && !link.includes('List'));
     } catch (error) {
         console.error(`Error fetching page ${title}:`, error);
@@ -89,6 +98,7 @@ async function getPageContent(title: string): Promise<string[]> {
 }
 
 async function main() {
+    console.log('Starting celebrity data fetch...');
     const allCelebrities = new Set<string>();
     
     for (const category of CATEGORIES) {
@@ -99,21 +109,23 @@ async function main() {
         for (const list of lists) {
             console.log(`Processing list: ${list}`);
             const celebrities = await getPageContent(list);
-            celebrities.forEach(celeb => allCelebrities.add(celeb));
+            celebrities.forEach(celebrity => allCelebrities.add(celebrity));
         }
     }
-
-    const outputPath = join(Deno.cwd(), 'data', 'celebrities.json');
-    await ensureDir(join(Deno.cwd(), 'data'));
-    await Deno.writeTextFile(
+    
+    const outputDir = path.join(process.cwd(), 'src', 'data');
+    await fs.mkdir(outputDir, { recursive: true });
+    
+    const outputPath = path.join(outputDir, 'celebrities.json');
+    await fs.writeFile(
         outputPath,
         JSON.stringify(Array.from(allCelebrities), null, 2)
     );
-
-    console.log(`Found ${allCelebrities.size} unique celebrities`);
-    console.log(`Data saved to ${outputPath}`);
+    
+    console.log(`Saved ${allCelebrities.size} unique celebrities to ${outputPath}`);
 }
 
-if (import.meta.main) {
-    main().catch(console.error);
-}
+main().catch(error => {
+    console.error('Error running script:', error);
+    process.exit(1);
+});
