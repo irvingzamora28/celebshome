@@ -1,4 +1,4 @@
-import { existsSync } from 'fs';
+import { existsSync, copyFileSync } from 'fs';
 import { join } from 'path';
 import sqlite3 from 'sqlite3';
 
@@ -11,8 +11,7 @@ const dbPath = process.env.NODE_ENV === 'production' ? tmpDbPath : localDbPath;
 if (process.env.NODE_ENV === 'production' && !existsSync(tmpDbPath)) {
   console.log(`Initializing writable database at ${tmpDbPath}`);
   if (existsSync(localDbPath)) {
-    const fs = require('fs'); // Use dynamic import for production
-    fs.copyFileSync(localDbPath, tmpDbPath);
+    copyFileSync(localDbPath, tmpDbPath);
     console.log('Database copied to /tmp');
   } else {
     console.error('Local database file not found for copying.');
