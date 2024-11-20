@@ -10,20 +10,6 @@
       "handle": "filesystem"
     }
   ],
-  "rewrites": [
-    {
-      "source": "/api/celebrities/featured",
-      "destination": "/api/celebrities/featured"
-    },
-    {
-      "source": "/api/celebrities/zodiac/:sign",
-      "destination": "/api/celebrities/zodiac/:sign"
-    },
-    {
-      "source": "/api/celebrities/search",
-      "destination": "/api/celebrities/search"
-    }
-  ],
   "env": {
     "NEXT_PUBLIC_BASE_URL": "https://celebshome.vercel.app"
   },
