@@ -4,7 +4,7 @@ import { CelebrityController } from '../../../../controllers/CelebrityController
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const query = searchParams.get('q');
+    const query = searchParams.get('query');
 
     if (!query) {
       return NextResponse.json(

@@ -193,7 +193,7 @@ export default function ZodiacClientPage({ sign, celebrities }: ZodiacClientPage
           {filteredCelebrities.map((celebrity) => (
             <Link
               key={celebrity.id}
-              href={`/celebrity/${encodeURIComponent(celebrity.name)}-${encodeURIComponent(celebrity.dateOfBirth)}`}
+              href={`/celebrity/${encodeURIComponent(celebrity.name)}-birth-${encodeURIComponent(celebrity.dateOfBirth)}`}
               className="block"
             >
               <div

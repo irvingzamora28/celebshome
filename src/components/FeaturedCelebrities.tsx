@@ -73,7 +73,7 @@ export default function FeaturedCelebrities() {
                     className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl overflow-hidden transition-all duration-300 transform hover:-translate-y-2"
                 >
                     <Link
-                        href={`/celebrity/${encodeURIComponent(celebrity.name)}-${encodeURIComponent(celebrity.dateOfBirth)}`}
+                        href={`/celebrity/${encodeURIComponent(celebrity.name)}-birth-${encodeURIComponent(celebrity.dateOfBirth)}`}
                         className="block"
                     >
                         <div className="relative aspect-video">

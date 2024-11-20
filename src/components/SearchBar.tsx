@@ -65,7 +65,7 @@ export default function SearchBar() {
               {results.map((celebrity) => (
                 <Link
                   key={celebrity.id}
-                  href={`/celebrity/${encodeURIComponent(celebrity.name)}-${encodeURIComponent(celebrity.dateOfBirth)}`}
+                  href={`/celebrity/${encodeURIComponent(celebrity.name)}-birth-${encodeURIComponent(celebrity.dateOfBirth)}`}
                   className="flex items-center gap-4 p-3 hover:bg-indigo-50 rounded-xl transition-colors"
                   onClick={() => setShowResults(false)}
                 >

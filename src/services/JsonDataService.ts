@@ -32,6 +32,7 @@ class JsonDataService {
 
     public async searchCelebrities(searchTerm: string): Promise<Celebrity[]> {
         const term = searchTerm.toLowerCase();
+        
         const matchingCelebs = this.celebrities
             .filter(celeb => 
                 celeb.name.toLowerCase().includes(term) || 
@@ -43,7 +44,8 @@ class JsonDataService {
 
     public async getCelebrityBySlug(slug: string): Promise<Celebrity | null> {
         try {
-            const [name, birthDateStr] = slug.split('-birth-');
+            const decodedSlug = decodeURIComponent(slug);
+            const [name, birthDateStr] = decodedSlug.split('-birth-');
             if (!name || !birthDateStr) {
                 throw new Error(`Invalid slug format: ${slug}`);
             }
