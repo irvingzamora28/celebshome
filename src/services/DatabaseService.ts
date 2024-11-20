@@ -81,22 +81,33 @@ export class DatabaseService {
 
   public async getCelebrityBySlug(slug: string): Promise<Celebrity | null> {
     return new Promise((resolve, reject) => {
-      const query = `
-        SELECT * FROM celebrities 
-        WHERE name || '-' || date_of_birth = ?
-      `;
-      
-      this.db.get(query, [slug], (err, row: DatabaseRow) => {
-        if (err) {
-          reject(err);
+        console.log(`Searching for celebrity with slug: ${slug}`);
+        
+        // Find the last occurrence of '-' to separate name and birth date
+        // and replace %20 with space
+        const [name] = slug.split('-').map((part) => decodeURIComponent(part.replace('%20', ' ')));
+        const birthDateMatch = slug.match(/\d{4}-\d{2}-\d{2}/);
+        if (!birthDateMatch) {
+          reject(new Error(`Invalid slug format: ${slug}`));
           return;
         }
-        if (!row) {
-          resolve(null);
-          return;
-        }
-        resolve(Celebrity.fromDatabaseRow(row));
-      });
+        const birthDate = birthDateMatch[0];
+        
+        console.log(`Searching for celebrity with name: ${name} and birth date: ${birthDate}`);
+        
+        const query = `
+          SELECT * FROM celebrities 
+          WHERE name = ? AND date_of_birth = ?
+        `;
+        
+        this.db.get(query, [name, birthDate], (err, row: DatabaseRow | undefined) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          const celebrity = row ? Celebrity.fromDatabaseRow(row) : null;
+          resolve(celebrity);
+        });
     });
   }
 }
