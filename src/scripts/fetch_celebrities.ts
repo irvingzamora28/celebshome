@@ -58,7 +58,8 @@ const CATEGORIES = [
     'Category:Lists_of_singers_by_nationality',
     'Category:Lists_of_athletes_by_nationality',
     'Category:American_men\'s_basketball_players',
-    'Category:American_women\'s_basketball_players'
+    'Category:American_women\'s_basketball_players',
+    'Category:Forbes_list_of_the_world%27s_highest-paid_athletes'
 ];
 
 interface WikipediaResponse {
