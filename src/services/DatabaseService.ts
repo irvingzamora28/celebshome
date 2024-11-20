@@ -1,6 +1,6 @@
 import db from '../lib/bd';
 import { Celebrity, type DatabaseRow } from '../models/Celebrity';
-
+import sqlite3 from 'sqlite3';
 export class DatabaseService {
     private static instance: DatabaseService;
 

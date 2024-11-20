@@ -16,10 +16,7 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
-  },
-  experimental: {
-    appDir: true, // Ensure the app directory is enabled
-  },
+  }
 };
 
 export default nextConfig;
