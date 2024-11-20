@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { CelebrityController } from "@/controllers/CelebrityController";
+import { CelebrityController } from "../../../../../controllers/CelebrityController";
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();

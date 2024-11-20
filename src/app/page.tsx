@@ -1,6 +1,6 @@
-import ZodiacGrid from "@/components/ZodiacGrid";
-import FeaturedCelebrities from "@/components/FeaturedCelebrities";
-import SearchBar from "@/components/SearchBar";
+import ZodiacGrid from "../components/ZodiacGrid";
+import FeaturedCelebrities from "../components/FeaturedCelebrities";
+import SearchBar from "../components/SearchBar";
 
 export default function Home() {
   return (

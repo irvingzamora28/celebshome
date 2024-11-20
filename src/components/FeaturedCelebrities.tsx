@@ -1,6 +1,6 @@
 'use client';
 
-import { ICelebrity } from '@/models/Celebrity';
+import { ICelebrity } from '../models/Celebrity';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';

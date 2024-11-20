@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ICelebrity } from '@/models/Celebrity';
+import { ICelebrity } from '../../../models/Celebrity';
 
 interface PageProps {
   params: Promise<{ slug: string }>;

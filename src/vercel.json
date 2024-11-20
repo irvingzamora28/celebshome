@@ -1,15 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "next build",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "outputDirectory": ".next",
   "devCommand": "next dev",
-  "routes": [
-    {
-      "handle": "filesystem"
-    }
-  ],
   "env": {
     "NEXT_PUBLIC_BASE_URL": "https://celebshome.vercel.app"
   },

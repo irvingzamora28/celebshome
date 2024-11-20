@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ICelebrity } from '@/models/Celebrity';
+import { ICelebrity } from '../models/Celebrity';
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');

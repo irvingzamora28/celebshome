@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { CelebrityController } from "@/controllers/CelebrityController";
+import { CelebrityController } from "../../../../../controllers/CelebrityController";
 
 export async function GET(req: NextRequest) {
   try {
