@@ -10,20 +10,37 @@ export default function SearchBar() {
   const [results, setResults] = useState<ICelebrity[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const searchCache = useState<Map<string, ICelebrity[]>>(new Map())[0];
 
   useEffect(() => {
     const searchCelebrities = async () => {
-      if (!query.trim()) {
+      const trimmedQuery = query.trim();
+      if (!trimmedQuery) {
         setResults([]);
+        return;
+      }
+
+      // Check cache first
+      if (searchCache.has(trimmedQuery)) {
+        setResults(searchCache.get(trimmedQuery)!);
         return;
       }
 
       setIsLoading(true);
       try {
-        const response = await fetch(`/api/celebrities/search?query=${encodeURIComponent(query)}`);
+        const response = await fetch(`/api/celebrities/search?query=${encodeURIComponent(trimmedQuery)}`);
         if (response.ok) {
           const data = await response.json();
           setResults(data);
+          // Cache the results
+          searchCache.set(trimmedQuery, data);
+          // Keep cache size reasonable
+          if (searchCache.size > 50) {
+            const keys = Array.from(searchCache.keys());
+            if (keys.length > 0) {
+              searchCache.delete(keys[0]);
+            }
+          }
         }
       } catch (error) {
         console.error('Error searching celebrities:', error);
@@ -32,9 +49,10 @@ export default function SearchBar() {
       }
     };
 
-    const debounceTimer = setTimeout(searchCelebrities, 300);
+    // Increase debounce time slightly for better performance
+    const debounceTimer = setTimeout(searchCelebrities, 400);
     return () => clearTimeout(debounceTimer);
-  }, [query]);
+  }, [query, searchCache]);
 
   return (
     <div className="relative w-full max-w-2xl mx-auto">
