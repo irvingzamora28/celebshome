@@ -1,7 +1,5 @@
 import { readFile } from 'fs/promises';
-import { join } from 'path';
 import db from '../lib/bd';
-import type { Database } from 'better-sqlite3';
 
 interface Celebrity {
     name: string;
@@ -14,7 +12,7 @@ interface Celebrity {
     biography: string;
     image_url: string;
     popularity_score: number;
-    [key: string]: any;
+    additional_data?: Record<string, unknown>;
 }
 
 // Function to update celebrity data
@@ -56,7 +54,7 @@ async function updateCelebrities(jsonFilePath: string) {
                 name, date_of_birth, date_of_death, zodiac_sign,
                 gender, nationality, profession, biography,
                 image_url, popularity_score,
-                ...additionalData
+                additional_data = {} as Record<string, unknown>
             } = celeb;
 
             try {
@@ -69,7 +67,7 @@ async function updateCelebrities(jsonFilePath: string) {
 
                 console.log(`Updating ${name}... with date of birth ${date_of_birth}`);
                 
-                const result = updateStmt.run(
+                updateStmt.run(
                     date_of_death || null,
                     zodiac_sign,
                     gender,
@@ -78,7 +76,7 @@ async function updateCelebrities(jsonFilePath: string) {
                     biography,
                     image_url,
                     popularity_score,
-                    JSON.stringify(additionalData),
+                    JSON.stringify(additional_data),
                     now,
                     name,
                     date_of_birth

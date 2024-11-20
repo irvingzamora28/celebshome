@@ -61,10 +61,11 @@ async function getWikipediaPageDetails(url: string): Promise<{ birthDate?: strin
 
         // Find death date in the infobox (hidden span with ISO date)
         const deathDateCell = Array.from(document.querySelectorAll('.infobox-label'))
-            .find(el => el.textContent?.trim() === 'Died')
-            ?.nextElementSibling;
+            .find(el => (el as HTMLElement).textContent?.trim() === 'Died') as HTMLElement | undefined;
         
-        const deathDate = deathDateCell
+        const deathDateValue = deathDateCell?.nextElementSibling as HTMLElement | undefined;
+        
+        const deathDate = deathDateValue
             ?.querySelector('span[style="display:none"]')
             ?.textContent
             ?.replace(/[()]/g, ''); // Remove parentheses from (YYYY-MM-DD)

@@ -5,10 +5,10 @@ import sqlite3 from 'sqlite3';
 // Define the paths for the database
 const tmpDbPath = join('/tmp', 'celebrities.db');
 const localDbPath = './celebrities.db';
-const dbPath = process.env.NODE_ENV === 'production' ? tmpDbPath : localDbPath;
+const dbPath = process.env.NODE_ENV === 'production' || process.env.VERCEL ? tmpDbPath : localDbPath;
 
 // In production, copy or initialize the writable database in `/tmp`
-if (process.env.NODE_ENV === 'production' && !existsSync(tmpDbPath)) {
+if ((process.env.NODE_ENV === 'production' || process.env.VERCEL) && !existsSync(tmpDbPath)) {
   console.log(`Initializing writable database at ${tmpDbPath}`);
   if (existsSync(localDbPath)) {
     copyFileSync(localDbPath, tmpDbPath);
