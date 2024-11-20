@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const controller = new CelebrityController();
+    const controller = CelebrityController.getInstance();
     const celebrity = await controller.getCelebrityBySlug(slug);
 
     if (!celebrity) {

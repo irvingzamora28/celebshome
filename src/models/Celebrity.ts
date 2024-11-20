@@ -12,7 +12,7 @@ export interface ICelebrity {
     popularityScore: number;
     additionalData?: Record<string, unknown>;
     createdAt: string;
-    updatedAt: string;
+    updatedAt?: string;
 }
 
 export interface DatabaseRow {
@@ -29,7 +29,7 @@ export interface DatabaseRow {
     popularity_score: number;
     additional_data?: string;
     created_at: string;
-    updated_at: string;
+    updated_at?: string;
 }
 
 export class Celebrity implements ICelebrity {
@@ -46,7 +46,7 @@ export class Celebrity implements ICelebrity {
     popularityScore: number;
     additionalData?: Record<string, unknown>;
     createdAt: string;
-    updatedAt: string;
+    updatedAt?: string;
 
     constructor(data: ICelebrity) {
         this.id = data.id;

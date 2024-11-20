@@ -4,39 +4,35 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run build:scripts && npm run db:init && next build",
+    "build": "next build",
     "vercel-build": "next build",
-    "build:scripts": "tsc -p tsconfig.scripts.json",
     "start": "next start",
     "lint": "next lint",
+    "build:scripts": "tsc -p tsconfig.scripts.json",
     "fetch:celebrities": "node dist/scripts/fetch_celebrities.js",
-    "fetch:enrich_celebrities": "node dist/scripts/enrich_celebrity_data.js",
-    "db:init": "node dist/scripts/db_init.js src/data/enriched_celebrities.json",
-    "db:update": "node dist/scripts/db_update.js src/data/enriched_celebrities.json"
+    "fetch:enrich_celebrities": "node dist/scripts/enrich_celebrity_data.js"
   },
   "dependencies": {
-    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "20.4.5",
+    "@types/react": "18.2.17",
+    "@types/react-dom": "18.2.7",
+    "autoprefixer": "10.4.14",
     "axios": "^1.6.2",
-    "better-sqlite3": "^11.5.0",
     "cross-fetch": "^4.0.0",
+    "eslint": "8.45.0",
+    "eslint-config-next": "13.4.12",
     "jsdom": "^25.0.1",
-    "next": "15.0.3",
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
-    "sqlite3": "^5.1.7"
+    "next": "13.4.12",
+    "postcss": "8.4.27",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "sqlite3": "^5.1.7",
+    "tailwindcss": "3.3.3",
+    "typescript": "5.1.6"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
-    "@types/node": "^20.17.6",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
     "@types/sqlite3": "^3.1.11",
-    "autoprefixer": "^10.0.1",
-    "eslint": "^8.56.0",
-    "eslint-config-next": "^14.0.4",
-    "postcss": "^8",
-    "tailwindcss": "^3.3.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "ts-node": "^10.9.2"
   }
 }

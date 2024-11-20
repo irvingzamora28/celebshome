@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const controller = new CelebrityController();
+    const controller = CelebrityController.getInstance();
     // Capitalize the first letter of the zodiac sign to match database format
     const celebrities = await controller.getCelebritiesByZodiac(
       capitalizeFirstLetter(sign)

@@ -1,46 +1,54 @@
-import { DatabaseService } from "../services/DatabaseService";
-import { Celebrity } from "../models/Celebrity";
+import { Celebrity } from '../models/Celebrity';
+import JsonDataService from '../services/JsonDataService';
 
 export class CelebrityController {
-    private dbService: DatabaseService;
+    private static instance: CelebrityController;
+    private dataService: JsonDataService;
 
-    constructor() {
-        this.dbService = DatabaseService.getInstance();
+    private constructor() {
+        this.dataService = JsonDataService.getInstance();
     }
 
-    async getFeaturedCelebrities(): Promise<Celebrity[]> {
+    public static getInstance(): CelebrityController {
+        if (!CelebrityController.instance) {
+            CelebrityController.instance = new CelebrityController();
+        }
+        return CelebrityController.instance;
+    }
+
+    public async getFeaturedCelebrities(limit: number = 10): Promise<Celebrity[]> {
         try {
-            return await this.dbService.getFeaturedCelebrities(10);
+            return await this.dataService.getFeaturedCelebrities(limit);
         } catch (error) {
-            console.error("Error fetching featured celebrities:", error);
-            throw new Error("Failed to fetch featured celebrities");
+            console.error('Error fetching featured celebrities:', error);
+            throw new Error('Failed to fetch featured celebrities');
         }
     }
 
-    async getCelebritiesByZodiac(zodiacSign: string): Promise<Celebrity[]> {
+    public async getCelebritiesByZodiac(zodiacSign: string): Promise<Celebrity[]> {
         try {
-            return await this.dbService.getCelebritiesByZodiac(zodiacSign);
+            return await this.dataService.getCelebritiesByZodiac(zodiacSign);
         } catch (error) {
-            console.error(`Error fetching celebrities for zodiac sign ${zodiacSign}:`, error);
-            throw new Error(`Failed to fetch celebrities for zodiac sign ${zodiacSign}`);
+            console.error('Error fetching celebrities by zodiac:', error);
+            throw new Error('Failed to fetch celebrities by zodiac sign');
         }
     }
 
-    async searchCelebrities(searchTerm: string): Promise<Celebrity[]> {
+    public async searchCelebrities(searchTerm: string): Promise<Celebrity[]> {
         try {
-            return await this.dbService.searchCelebrities(searchTerm);
+            return await this.dataService.searchCelebrities(searchTerm);
         } catch (error) {
-            console.error(`Error searching celebrities with term ${searchTerm}:`, error);
-            throw new Error("Failed to search celebrities");
+            console.error('Error searching celebrities:', error);
+            throw new Error('Failed to search celebrities');
         }
     }
 
-    async getCelebrityBySlug(slug: string): Promise<Celebrity | null> {
+    public async getCelebrityBySlug(slug: string): Promise<Celebrity | null> {
         try {
-            return await this.dbService.getCelebrityBySlug(slug);
+            return await this.dataService.getCelebrityBySlug(slug);
         } catch (error) {
-            console.error(`Error fetching celebrity by slug ${slug}:`, error);
-            throw new Error(`Failed to fetch celebrity by slug ${slug}`);
+            console.error('Error fetching celebrity by slug:', error);
+            throw new Error('Failed to fetch celebrity profile');
         }
     }
 }

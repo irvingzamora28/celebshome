@@ -6,8 +6,8 @@ export async function GET() {
     console.log('Start processing /api/celebrities/featured');
   
     try {
-      const controller = new CelebrityController();
-      const celebrities = await controller.getFeaturedCelebrities();
+      const controller = CelebrityController.getInstance();
+      const celebrities = await controller.getFeaturedCelebrities(10);
   
       console.log(`Fetched ${celebrities.length} celebrities`);
       return NextResponse.json(celebrities);
@@ -21,4 +21,4 @@ export async function GET() {
       const endTime = Date.now();
       console.log(`Finished processing in ${endTime - startTime}ms`);
     }
-  }
+}
