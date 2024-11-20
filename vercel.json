@@ -31,11 +31,5 @@
     "env": {
       "NEXT_PUBLIC_BASE_URL": "https://celebshome.vercel.app"
     }
-  },
-  "builds": [
-    {
-      "src": "nextjs",
-      "use": "@vercel/next"
-    }
-  ]
+  }
 }
