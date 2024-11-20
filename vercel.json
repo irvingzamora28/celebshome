@@ -3,5 +3,49 @@
   "buildCommand": "next build",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "outputDirectory": ".next"
+  "outputDirectory": ".next",
+  "devCommand": "next dev",
+  "routes": [
+    {
+      "handle": "filesystem"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/celebrities/featured",
+      "destination": "/api/celebrities/featured"
+    },
+    {
+      "source": "/api/celebrities/zodiac/:sign",
+      "destination": "/api/celebrities/zodiac/:sign"
+    },
+    {
+      "source": "/api/celebrities/search",
+      "destination": "/api/celebrities/search"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_BASE_URL": "https://celebshome.vercel.app"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_BASE_URL": "https://celebshome.vercel.app"
+    }
+  },
+  "dev": {
+    "env": {
+      "NEXT_PUBLIC_BASE_URL": "http://localhost:3000"
+    }
+  },
+  "production": {
+    "env": {
+      "NEXT_PUBLIC_BASE_URL": "https://celebshome.vercel.app"
+    }
+  },
+  "builds": [
+    {
+      "src": "nextjs",
+      "use": "@vercel/next"
+    }
+  ]
 }
