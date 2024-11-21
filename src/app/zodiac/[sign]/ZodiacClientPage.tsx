@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { getZodiacEmoji } from "../../../utils/zodiac";
 
 interface Celebrity {
   id: number;
@@ -24,14 +25,6 @@ interface Filters {
   birthYear: string;
 }
 
-function getZodiacEmoji(sign: string): string {
-  const zodiacEmojis: { [key: string]: string } = {
-    aries: '♈', taurus: '♉', gemini: '♊', cancer: '♋', 
-    leo: '♌', virgo: '♍', libra: '♎', scorpio: '♏', 
-    sagittarius: '♐', capricorn: '♑', aquarius: '♒', pisces: '♓'
-  };
-  return zodiacEmojis[sign.toLowerCase()] || '⭐';
-}
 
 export default function ZodiacClientPage({ sign, celebrities }: ZodiacClientPageProps) {
   const [filters, setFilters] = useState<Filters>({

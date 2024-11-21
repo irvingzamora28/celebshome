@@ -4,6 +4,8 @@ import { ICelebrity } from '../models/Celebrity';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { getZodiacEmoji } from "../utils/zodiac";
+
 
 export default function FeaturedCelebrities() {
     const [celebrities, setCelebrities] = useState<ICelebrity[]>([]);
@@ -111,13 +113,4 @@ export default function FeaturedCelebrities() {
             ))}
         </div>
     );
-}
-
-function getZodiacEmoji(sign: string): string {
-    const zodiacEmojis: { [key: string]: string } = {
-        'Aries': '♈', 'Taurus': '♉', 'Gemini': '♊', 'Cancer': '♋', 
-        'Leo': '♌', 'Virgo': '♍', 'Libra': '♎', 'Scorpio': '♏', 
-        'Sagittarius': '♐', 'Capricorn': '♑', 'Aquarius': '♒', 'Pisces': '♓'
-    };
-    return zodiacEmojis[sign] || '⭐';
 }
