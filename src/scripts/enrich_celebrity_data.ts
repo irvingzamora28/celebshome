@@ -55,12 +55,24 @@ async function getWikipediaPageDetails(url: string): Promise<{ birthDate?: strin
         const dom = new JSDOM(html);
         const document = dom.window.document;
 
+        // Find the infobox
+        const infoboxLabels = Array.from(document.querySelectorAll('.infobox-label'));
+        
+        // Check if this is likely a person by looking for person-specific labels
+        const isBornLabel = infoboxLabels.some(el => 
+            (el as HTMLElement).textContent?.trim() === 'Born'
+        );
+        // Only proceed if we have strong indicators this is a person
+        if (!isBornLabel) {
+            return { contentLength: 0 };
+        }
+
         // Find birth date in the infobox (hidden span with ISO date)
         const birthDateSpan = document.querySelector('.bday');
-        const birthDate = birthDateSpan?.textContent ?? undefined;
+        let birthDate = birthDateSpan?.textContent || undefined;
 
         // Find death date in the infobox (hidden span with ISO date)
-        const deathDateCell = Array.from(document.querySelectorAll('.infobox-label'))
+        const deathDateCell = infoboxLabels
             .find(el => (el as HTMLElement).textContent?.trim() === 'Died') as HTMLElement | undefined;
         
         const deathDateValue = deathDateCell?.nextElementSibling as HTMLElement | undefined;
