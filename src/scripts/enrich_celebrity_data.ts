@@ -30,6 +30,7 @@ interface EnrichedCelebrity {
     famous_works: string[];
     popularity_score: number;
     created_at: string;
+    additionalData: Record<string, unknown>;
 }
 
 async function getWikipediaInfo(name: string): Promise<WikipediaPageInfo | null> {
@@ -46,53 +47,127 @@ async function getWikipediaInfo(name: string): Promise<WikipediaPageInfo | null>
     }
 }
 
-async function getWikipediaPageDetails(url: string): Promise<{ birthDate?: string; deathDate?: string; contentLength: number }> {
+async function getWikipediaPageDetails(url: string): Promise<{
+    birthDate?: string;
+    deathDate?: string;
+    fullName?: string;
+    birthPlace?: string;
+    occupations?: string[];
+    organizations?: string[];
+    contentLength: number;
+    additionalData: Record<string, string | string[]>;
+}> {
     try {
         const response = await fetch(url);
-        if (!response.ok) return { contentLength: 0 };
+        if (!response.ok) return { contentLength: 0, additionalData: {} };
         
         const html = await response.text();
         const dom = new JSDOM(html);
         const document = dom.window.document;
 
-        // Find the infobox
-        const infoboxLabels = Array.from(document.querySelectorAll('.infobox-label'));
-        
-        // Check if this is likely a person by looking for person-specific labels
-        const isBornLabel = infoboxLabels.some(el => 
-            (el as HTMLElement).textContent?.trim() === 'Born'
-        );
-        // Only proceed if we have strong indicators this is a person
-        if (!isBornLabel) {
-            return { contentLength: 0 };
+        const details: {
+            birthDate?: string;
+            deathDate?: string;
+            fullName?: string;
+            birthPlace?: string;
+            occupations?: string[];
+            organizations?: string[];
+            contentLength: number;
+            additionalData: Record<string, string | string[]>;
+        } = {
+            contentLength: 0,
+            additionalData: {}
+        };
+
+        // Get infobox data
+        const infobox = document.querySelector('.infobox');
+        if (infobox) {
+            const rows = infobox.querySelectorAll('tr');
+            rows.forEach(row => {
+                const label = row.querySelector('.infobox-label')?.textContent?.toLowerCase().trim();
+                const data = row.querySelector('.infobox-data');
+                
+                if (label && data) {
+                    // Get birth date from the hidden span with class bday
+                    if (label.includes('born')) {
+                        const bdaySpan = data.querySelector('.bday');
+                        if (bdaySpan) {
+                            details.birthDate = bdaySpan.textContent?.trim();
+                        }
+                        const birthplaceDiv = data.querySelector('.birthplace');
+                        if (birthplaceDiv) {
+                            details.birthPlace = birthplaceDiv.textContent?.trim();
+                        }
+                    } 
+                    // Get death date from hidden span
+                    else if (label.includes('died')) {
+                        const deathDateSpan = data.querySelector('span[style*="display:none"]');
+                        if (deathDateSpan) {
+                            const deathDate = deathDateSpan.textContent?.trim().match(/\d{4}-\d{2}-\d{2}/)?.[0];
+                            if (deathDate) details.deathDate = deathDate;
+                        }
+                    }
+                    
+                    // Store all data dynamically, analyzing if it's a list or plain text
+                    const key = label.replace(/\s+/g, '_');
+                    
+                    // Check if the data contains a list
+                    const listItems = Array.from(data.querySelectorAll('li'))
+                        .map(li => li.textContent?.trim())
+                        .filter((text): text is string => !!text);
+                    
+                    if (listItems.length > 0) {
+                        // It's a list
+                        details.additionalData[key] = listItems;
+                    } else if (data.querySelector('div.plainlist')) {
+                        // Handle plainlist format
+                        const plainListItems = Array.from(data.querySelectorAll('div.plainlist li'))
+                            .map(li => li.textContent?.trim())
+                            .filter((text): text is string => !!text);
+                        details.additionalData[key] = plainListItems.length > 0 ? plainListItems : [data.textContent?.trim() || ''];
+                    } else if (data.querySelector('.hlist')) {
+                        // Handle hlist format
+                        const hlistItems = Array.from(data.querySelectorAll('.hlist li'))
+                            .map(li => li.textContent?.trim())
+                            .filter((text): text is string => !!text);
+                        details.additionalData[key] = hlistItems.length > 0 ? hlistItems : [data.textContent?.trim() || ''];
+                    } else {
+                        // It's plain text
+                        const value = data.textContent?.trim() || '';
+                        // Check if it might be a comma-separated list
+                        if (value.includes(',')) {
+                            details.additionalData[key] = value.split(',').map(item => item.trim());
+                        } else {
+                            details.additionalData[key] = value;
+                        }
+                    }
+
+                    // Special handling for occupations
+                    if (label.includes('occupation')) {
+                        const occupations = Array.from(data.querySelectorAll('li'))
+                            .map(li => li.textContent?.trim())
+                            .filter((text): text is string => !!text);
+                        details.occupations = occupations.length > 0 ? 
+                            occupations : 
+                            data.textContent?.trim().split(',').map(o => o.trim()) || [];
+                    }
+                }
+            });
         }
 
-        // Find birth date in the infobox (hidden span with ISO date)
-        const birthDateSpan = document.querySelector('.bday');
-        let birthDate = birthDateSpan?.textContent || undefined;
+        // Get organizations/teams
+        const organizationsList = document.querySelectorAll('a[href*="team"], a[href*="club"], a[href*="organization"]');
+        details.organizations = Array.from(organizationsList)
+            .map(org => org.textContent?.trim())
+            .filter((org): org is string => !!org);
 
-        // Find death date in the infobox (hidden span with ISO date)
-        const deathDateCell = infoboxLabels
-            .find(el => (el as HTMLElement).textContent?.trim() === 'Died') as HTMLElement | undefined;
-        
-        const deathDateValue = deathDateCell?.nextElementSibling as HTMLElement | undefined;
-        
-        const deathDate = deathDateValue
-            ?.querySelector('span[style="display:none"]')
-            ?.textContent
-            ?.replace(/[()]/g, ''); // Remove parentheses from (YYYY-MM-DD)
+        // Get content length as a rough measure of notability
+        details.contentLength = document.querySelector('#mw-content-text')?.textContent?.length || 0;
 
-        // Calculate content length as a rough popularity score
-        const contentLength = html.length;
-
-        return {
-            birthDate,
-            deathDate,
-            contentLength,
-        };
+        return details;
     } catch (error) {
-        console.error(`Error fetching Wikipedia page details:`, error);
-        return { contentLength: 0 };
+        console.error('Error fetching Wikipedia page details:', error);
+        return { contentLength: 0, additionalData: {} };
     }
 }
 
@@ -126,6 +201,15 @@ async function enrichCelebrity(name: string): Promise<EnrichedCelebrity | null> 
         return null;
     }
 
+    // Create additionalData object with new information
+    const additionalData: Record<string, unknown> = {
+        fullName: pageDetails.fullName || name,
+        birthPlace: pageDetails.birthPlace,
+        organizations: pageDetails.organizations,
+        wikiUrl: info.content_urls.desktop.page,
+        ...pageDetails.additionalData
+    };
+
     // Use a placeholder image if none is available
     const imageUrl = info.thumbnail?.source || 'https://loremflickr.com/640/480/abstract';
 
@@ -151,7 +235,8 @@ async function enrichCelebrity(name: string): Promise<EnrichedCelebrity | null> 
         famous_works: [],
         popularity_score: popularityScore,
         created_at: new Date().toISOString(),
-        id: Math.floor(Math.random() * 1000000)
+        id: Math.floor(Math.random() * 1000000),
+        additionalData,
     };
 }
 
