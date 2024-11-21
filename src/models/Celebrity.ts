@@ -10,7 +10,9 @@ export interface ICelebrity {
     biography: string;
     imageUrl: string;
     popularityScore: number;
-    additionalData?: Record<string, unknown>;
+    additionalData?: Record<string, unknown> & {
+        wikiUrl?: string;
+      };
     createdAt: string;
     updatedAt?: string;
 }
