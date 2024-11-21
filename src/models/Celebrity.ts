@@ -26,8 +26,9 @@ export interface DatabaseRow {
     profession: string;
     biography: string;
     image_url: string;
+    social_links: string;
     popularity_score: number;
-    additional_data?: string;
+    additional_data?: Record<string, unknown>;
     created_at: string;
     updated_at?: string;
 }
@@ -78,7 +79,7 @@ export class Celebrity implements ICelebrity {
             biography: row.biography,
             imageUrl: row.image_url,
             popularityScore: row.popularity_score,
-            additionalData: row.additional_data ? JSON.parse(row.additional_data) : undefined,
+            additionalData: row.additional_data,
             createdAt: row.created_at,
             updatedAt: row.updated_at,
         });

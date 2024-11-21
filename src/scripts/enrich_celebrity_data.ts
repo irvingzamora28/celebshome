@@ -1,6 +1,7 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { JSDOM } from 'jsdom';
+import { type DatabaseRow } from '../models/Celebrity';
 
 interface WikipediaPageInfo {
     extract: string;
@@ -13,24 +14,6 @@ interface WikipediaPageInfo {
             page: string;
         };
     };
-}
-
-interface EnrichedCelebrity {
-    id: number;
-    name: string;
-    date_of_birth: string;
-    date_of_death?: string;
-    zodiac_sign: string;
-    gender: string;
-    nationality: string;
-    profession: string;
-    biography: string;
-    image_url: string;
-    social_links: string;
-    famous_works: string[];
-    popularity_score: number;
-    created_at: string;
-    additionalData: Record<string, unknown>;
 }
 
 async function getWikipediaInfo(name: string): Promise<WikipediaPageInfo | null> {
@@ -204,7 +187,7 @@ function getZodiacSign(dateStr: string): string {
     return "Pisces";
 }
 
-async function enrichCelebrity(name: string): Promise<EnrichedCelebrity | null> {
+async function enrichCelebrity(name: string): Promise<DatabaseRow | null> {
     const info = await getWikipediaInfo(name);
     if (!info || !info.extract || !info.content_urls?.desktop.page) return null;
 
@@ -246,11 +229,10 @@ async function enrichCelebrity(name: string): Promise<EnrichedCelebrity | null> 
         biography: info.extract,
         image_url: imageUrl,
         social_links: info.content_urls.desktop.page,
-        famous_works: [],
         popularity_score: popularityScore,
         created_at: new Date().toISOString(),
         id: Math.floor(Math.random() * 1000000),
-        additionalData,
+        additional_data: additionalData,
     };
 }
 
@@ -264,7 +246,7 @@ async function main() {
 
         const rawData = await fs.readFile(inputPath, 'utf8');
         const celebrities: string[] = JSON.parse(rawData);
-        const enrichedCelebrities: EnrichedCelebrity[] = [];
+        const enrichedCelebrities: DatabaseRow[] = [];
 
         for (const celebrity of celebrities) {
             console.log(`Processing ${celebrity}...`);
