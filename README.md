@@ -1,6 +1,6 @@
 # Celebrity Zodiac Web Application
 
-A modern web application that showcases and organizes celebrities by their zodiac signs. Built with Next.js 15, TypeScript, Tailwind CSS, and SQLite.
+A modern web application that showcases and organizes celebrities by their zodiac signs. Built with Next.js 15, TypeScript, and Tailwind CSS.
 
 ## Features
 
@@ -8,7 +8,7 @@ A modern web application that showcases and organizes celebrities by their zodia
 - View featured celebrities
 - Search celebrities by name or profession
 - Responsive design with modern UI
-- Efficient database querying and caching
+- Efficient data handling with JSON files
 - Type-safe data handling
 
 ## Tech Stack
@@ -20,21 +20,19 @@ A modern web application that showcases and organizes celebrities by their zodia
   - Next.js Image Component
 
 - **Backend:**
-  - SQLite3
-  - Node.js
   - Next.js API Routes
+  - Node.js
+  - JSON Data Storage
 
 - **Data Processing:**
-  - Deno Runtime
-  - Deno SQLite
-  - Deno Standard Modules
+  - Node.js Scripts
+  - TypeScript
+  - Custom API (for data enrichment)
 
 ## Prerequisites
 
 - Node.js (v18 or higher)
 - npm or yarn
-- SQLite3
-- Deno (v1.37 or higher)
 
 ## Installation
 
@@ -46,9 +44,9 @@ cd celebshome
 
 2. Install dependencies:
 ```bash
-npm install && deno install
+npm install
 # or
-yarn install && deno install
+yarn install
 ```
 
 3. Set up environment variables:
@@ -61,52 +59,79 @@ Edit `.env` file and set your configuration:
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ```
 
-## Data Processing and Database Setup
+## Data Processing Scripts
 
 ### 1. Fetch Initial Celebrity Data
 ```bash
-deno run --allow-net --allow-write scripts/fetch_celebrities.ts
+npm run fetch:celebrities
+# or
+yarn fetch:celebrities
 ```
 
 ### 2. Enrich Celebrity Data
 ```bash
-deno run --allow-net --allow-write --allow-read scripts/enrich_celebrity_data.ts
+npm run fetch:enrich_celebrities
+# or
+yarn fetch:enrich_celebrities
 ```
 
-### 3. Initialize Database with Enriched Data
+The data processing scripts will:
+1. Fetch a list of celebrities from various sources
+2. Enrich the data with biographical information using OpenAI's API
+3. Save the processed data to JSON files in the `data` directory
+
+## Development
+
+Run the development server:
 ```bash
-deno run --allow-read --allow-write --allow-net --unstable scripts/db_init.ts data/enriched_celebrities.json
+npm run dev
+# or
+yarn dev
 ```
 
-### 4. Update Database with New Data
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Production Build
+
+Build the application for production:
 ```bash
-deno run --allow-read --allow-write scripts/db_update.ts data/enriched_celebrities.json
+npm run build
+# or
+yarn build
 ```
 
-### Database Schema
-```sql
-CREATE TABLE celebrities (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    date_of_birth TEXT NOT NULL,
-    zodiac_sign TEXT NOT NULL,
-    profession TEXT NOT NULL,
-    nationality TEXT NOT NULL,
-    image_url TEXT NOT NULL,
-    popularity_score INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-## Running the Application
-
-1. Start the development server:
+Start the production server:
 ```bash
-deno task dev
+npm start
+# or
+yarn start
 ```
 
-2. Open [http://localhost:3000](http://localhost:3000) in your browser.
+## Data Structure
+
+The application uses JSON files to store celebrity data with the following structure:
+
+```typescript
+interface ICelebrity {
+  id: number;
+  name: string;
+  dateOfBirth: string;
+  dateOfDeath?: string;
+  zodiacSign: string;
+  gender: string;
+  nationality: string;
+  profession: string;
+  biography: string;
+  imageUrl: string;
+  popularityScore: number;
+  additionalData?: {
+    wikiUrl?: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+  updatedAt?: string;
+}
+```
 
 ## Project Structure
 
@@ -118,13 +143,12 @@ celebshome/
 │   ├── models/          # Data models
 │   ├── services/        # Service layer
 │   └── controllers/     # Controllers
-├── scripts/            # Deno scripts for data processing
+├── scripts/            # Scripts for data processing
 │   ├── fetch_celebrities.ts
 │   ├── enrich_celebrity_data.ts
-│   ├── db_init.ts
-│   └── db_update.ts
 ├── public/            # Static files
 └── data/             # JSON data and database files
+    └── celebrities.json
     └── enriched_celebrities.json
 ```
 
@@ -138,6 +162,7 @@ celebshome/
 ## API Routes
 
 - `GET /api/celebrities/featured` - Get featured celebrities
+- `GET /api/celebrities/profile/:slug` - Get celebrity profile
 - `GET /api/celebrities/zodiac/:sign` - Get celebrities by zodiac sign
 - `GET /api/celebrities/search` - Search celebrities
 
