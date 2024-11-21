@@ -88,6 +88,18 @@ async function getWikipediaPageDetails(url: string): Promise<{
                 const data = row.querySelector('.infobox-data');
                 
                 if (label && data) {
+                    // Function to clean text content
+                    const cleanTextContent = (element: Element): string => {
+                        // Remove style tags
+                        const styleElements = Array.from(element.querySelectorAll('style'));
+                        styleElements.forEach(el => el.remove());
+
+                        // Replace special characters and whitespace
+                        return element.textContent?.replace(/\u200B/g, '') // Remove zero-width space
+                            .replace(/\s+/g, ' ') // Normalize whitespace
+                            .trim() || '';
+                    };
+
                     // Get birth date from the hidden span with class bday
                     if (label.includes('born')) {
                         const bdaySpan = data.querySelector('.bday');
@@ -96,7 +108,7 @@ async function getWikipediaPageDetails(url: string): Promise<{
                         }
                         const birthplaceDiv = data.querySelector('.birthplace');
                         if (birthplaceDiv) {
-                            details.birthPlace = birthplaceDiv.textContent?.trim();
+                            details.birthPlace = cleanTextContent(birthplaceDiv);
                         }
                     } 
                     // Get death date from hidden span
@@ -113,8 +125,8 @@ async function getWikipediaPageDetails(url: string): Promise<{
                     
                     // Check if the data contains a list
                     const listItems = Array.from(data.querySelectorAll('li'))
-                        .map(li => li.textContent?.trim())
-                        .filter((text): text is string => !!text);
+                        .map(li => cleanTextContent(li))
+                        .filter(text => text.length > 0);
                     
                     if (listItems.length > 0) {
                         // It's a list
@@ -122,21 +134,23 @@ async function getWikipediaPageDetails(url: string): Promise<{
                     } else if (data.querySelector('div.plainlist')) {
                         // Handle plainlist format
                         const plainListItems = Array.from(data.querySelectorAll('div.plainlist li'))
-                            .map(li => li.textContent?.trim())
-                            .filter((text): text is string => !!text);
-                        details.additionalData[key] = plainListItems.length > 0 ? plainListItems : [data.textContent?.trim() || ''];
+                            .map(li => cleanTextContent(li))
+                            .filter(text => text.length > 0);
+                        details.additionalData[key] = plainListItems.length > 0 ? plainListItems : [cleanTextContent(data)];
                     } else if (data.querySelector('.hlist')) {
                         // Handle hlist format
                         const hlistItems = Array.from(data.querySelectorAll('.hlist li'))
-                            .map(li => li.textContent?.trim())
-                            .filter((text): text is string => !!text);
-                        details.additionalData[key] = hlistItems.length > 0 ? hlistItems : [data.textContent?.trim() || ''];
+                            .map(li => cleanTextContent(li))
+                            .filter(text => text.length > 0);
+                        details.additionalData[key] = hlistItems.length > 0 ? hlistItems : [cleanTextContent(data)];
                     } else {
                         // It's plain text
-                        const value = data.textContent?.trim() || '';
+                        const value = cleanTextContent(data);
                         // Check if it might be a comma-separated list
                         if (value.includes(',')) {
-                            details.additionalData[key] = value.split(',').map(item => item.trim());
+                            details.additionalData[key] = value.split(',')
+                                .map(item => item.trim())
+                                .filter(item => item.length > 0);
                         } else {
                             details.additionalData[key] = value;
                         }
@@ -145,11 +159,11 @@ async function getWikipediaPageDetails(url: string): Promise<{
                     // Special handling for occupations
                     if (label.includes('occupation')) {
                         const occupations = Array.from(data.querySelectorAll('li'))
-                            .map(li => li.textContent?.trim())
-                            .filter((text): text is string => !!text);
+                            .map(li => cleanTextContent(li))
+                            .filter(text => text.length > 0);
                         details.occupations = occupations.length > 0 ? 
                             occupations : 
-                            data.textContent?.trim().split(',').map(o => o.trim()) || [];
+                            cleanTextContent(data).split(',').map(o => o.trim()).filter(o => o.length > 0);
                     }
                 }
             });
