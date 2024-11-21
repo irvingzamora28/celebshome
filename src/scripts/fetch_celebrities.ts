@@ -59,7 +59,13 @@ const CATEGORIES = [
     'Category:Lists_of_athletes_by_nationality',
     'Category:American_men\'s_basketball_players',
     'Category:American_women\'s_basketball_players',
-    'Category:Forbes_list_of_the_world%27s_highest-paid_athletes'
+];
+
+const DIRECT_PAGES = [
+    'Forbes Celebrity 100',
+    'List of highest-paid film actors',
+    'List of highest-paid television actors',
+    'Forbes_list_of_the_world\'s_highest-paid_athletes'
 ];
 
 interface WikipediaResponse {
@@ -132,9 +138,11 @@ async function getPageContent(title: string): Promise<string[]> {
     const url = new URL('https://en.wikipedia.org/w/api.php');
     url.search = new URLSearchParams({
         action: 'query',
-        prop: 'links',
+        prop: 'links|extracts',  // Add extracts
         titles: title,
         pllimit: '500',
+        exintro: '1',
+        explaintext: '1',
         format: 'json',
         origin: '*'
     }).toString();
@@ -145,9 +153,31 @@ async function getPageContent(title: string): Promise<string[]> {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        const pages = Object.values(data.query.pages) as Array<{ links?: Array<{ title: string }> }>;
-        const links = pages[0]?.links?.map(link => link.title) || [];
-        return links.filter((link: string) => !link.includes(':') && !link.includes('List'));
+        const pages = Object.values(data.query.pages) as Array<{ links?: Array<{ title: string }>; extracts?: string }>;
+        const page = pages[0];
+        if (!page) return [];
+        const links = page.links?.map(link => link.title) || [];
+                
+        // Filter out obvious non-person entries
+        return links.filter(link => {
+            const lower = link.toLowerCase();
+            return !link.includes(':') && 
+                   !link.includes('List') &&
+                   !lower.includes('list') &&
+                   !lower.includes('film') &&
+                   !lower.includes('movie') &&
+                   !lower.includes('tv series') &&
+                   !lower.includes('show') &&
+                   !lower.includes('episode') &&
+                   !lower.includes('building') &&
+                   !lower.includes('company') &&
+                   !lower.includes('game') &&
+                   !lower.includes('book') &&
+                   !lower.includes('album') &&
+                   !lower.includes('award') &&
+                   !lower.includes('franchise') &&
+                   !lower.includes('brand');
+        });
     } catch (error) {
         console.error(`Error fetching page ${title}:`, error);
         return [];
@@ -158,6 +188,7 @@ async function main() {
     console.log('Starting celebrity data fetch...');
     const allCelebrities = new Set<string>();
     
+    // Process categories first
     for (const category of CATEGORIES) {
         console.log(`Processing category: ${category}`);
         const lists = await getCategoryMembers(category);
@@ -168,6 +199,14 @@ async function main() {
             const celebrities = await getPageContent(list);
             celebrities.forEach(celebrity => allCelebrities.add(celebrity));
         }
+    }
+
+    // Process direct pages
+    console.log('\nProcessing direct pages...');
+    for (const page of DIRECT_PAGES) {
+        console.log(`Processing page: ${page}`);
+        const celebrities = await getPageContent(page);
+        celebrities.forEach(celebrity => allCelebrities.add(celebrity));
     }
     
     const outputDir = path.join(process.cwd(), 'src', 'data');
