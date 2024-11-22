@@ -25522,5 +25522,100 @@
         "2022"
       ]
     }
+  },
+  {
+    "name": "Elon Musk",
+    "date_of_birth": "1971-06-28",
+    "zodiac_sign": "Cancer",
+    "gender": "Male",
+    "nationality": "Unknown",
+    "profession": "Unknown",
+    "biography": "Elon Reeve Musk is a businessman known for his key roles in the space company SpaceX and the automotive company Tesla, Inc. His other involvements include ownership of X Corp., the company that operates the social media platform X, and his role in the founding of the Boring Company, xAI, Neuralink, and OpenAI. In November 2024, United States president-elect Donald Trump appointed Musk as the co-chair of the proposed Department of Government Efficiency (DOGE) in the second Trump administration. Musk is the wealthiest individual in the world; as of November 2024, Forbes estimates his net worth to be US$304 billion.",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Elon_Musk_Royal_Society_crop.jpg/320px-Elon_Musk_Royal_Society_crop.jpg",
+    "social_links": "https://en.wikipedia.org/wiki/Elon_Musk",
+    "popularity_score": 100,
+    "created_at": "2024-11-22T13:33:56.211Z",
+    "id": 568704,
+    "additional_data": {
+      "fullName": "Elon Musk",
+      "birthPlace": "Pretoria, Transvaal, South Africa",
+      "wikiUrl": "https://en.wikipedia.org/wiki/Elon_Musk",
+      "citizenship": "South Africa Canada United States (from 2002)",
+      "education": "University of Pennsylvania(BA, BS)",
+      "title": "Founder, CEO, and chief engineer of SpaceX CEO and product architect of Tesla, Inc. Owner, CTO and executive chairman of X (formerly Twitter) President of the Musk Foundation Founder of The Boring Company, X Corp., and xAI Co-founder of Neuralink, OpenAI, Zip2, and X.com (part of PayPal)",
+      "spouses": "Justine Wilson (m. 2000; div. 2008) Talulah Riley (m. 2010; div. 2012) (m. 2013; div. 2016)",
+      "partners": "Grimes (2018–2021)[1]",
+      "children": "12[2]",
+      "parents": "Errol MuskMaye Musk",
+      "relatives": "Kimbal Musk (brother) Tosca Musk (sister) Lyndon Rive (cousin)",
+      "awards": "Full list"
+    }
+  },
+  {
+    "name": "Tupac",
+    "date_of_birth": "1971-06-16",
+    "date_of_death": "1996-09-13",
+    "zodiac_sign": "Gemini",
+    "gender": "Male",
+    "nationality": "American",
+    "profession": "Unknown",
+    "biography": "Tupac Amaru Shakur, also known by his stage names 2Pac and Makaveli, was an American rapper and actor. Considered to be one of the greatest and most influential rappers of all time, academics regard him as one of the most influential music artists of the 20th century and a prominent political activist for Black America. In addition to his music career, Shakur also wrote poetry and had numerous starring roles in movies. Shakur is among the best-selling music artists, having sold more than 75 million records worldwide. His lyrical content has been noted for addressing social injustice, political issues, and the marginalization of other African-Americans, but he was also synonymous with gangsta rap and violent lyrics.",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Tupac_Shakur.jpg",
+    "social_links": "https://en.wikipedia.org/wiki/Tupac_Shakur",
+    "popularity_score": 100,
+    "created_at": "2024-11-22T13:33:57.084Z",
+    "id": 876925,
+    "additional_data": {
+      "fullName": "Tupac",
+      "birthPlace": "Manhattan, New York City, U.S.",
+      "wikiUrl": "https://en.wikipedia.org/wiki/Tupac_Shakur",
+      "cause of death": "Drive-by homicide (gunshot wounds)",
+      "other names": "2PacPacMakaveliMC New York",
+      "education": "Dunbar High School Baltimore School for the Arts Tamalpais High School",
+      "years active": "1989–1996",
+      "spouse": "Keisha Morris (m. 1995; ann. 1996)",
+      "parents": "Afeni ShakurBilly Garland",
+      "relatives": "Mutulu Shakur (step-father)Assata Shakur (step-aunt)Mopreme Shakur (step-brother)Kastro (cousin)",
+      "awards": "Full list",
+      "genres": "West Coast hip hopgangsta rappolitical hip hop",
+      "discography": "Tupac Shakur discography",
+      "labels": "InterscopeDeath RowAtlanticTNTOut da Gutta",
+      "formerly of": "Digital UndergroundThug LifeOutlawz",
+      "website": "www.2pac.com"
+    }
+  },
+  {
+    "name": "Ice Cube",
+    "date_of_birth": "1969-06-15",
+    "zodiac_sign": "Gemini",
+    "gender": "Male",
+    "nationality": "American",
+    "profession": "actor",
+    "biography": "O'Shea Jackson Sr., known professionally as Ice Cube, is an American rapper, songwriter, actor, and film producer. His lyrics on N.W.A's 1988 album Straight Outta Compton contributed to gangsta rap's widespread popularity, and his political rap solo albums AmeriKKKa's Most Wanted (1990), Death Certificate (1991), and The Predator (1992) were all critically and commercially successful. He was inducted into the Rock and Roll Hall of Fame as a member of N.W.A in 2016.",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Ice-Cube_2014-01-09-Chicago-photoby-Adam-Bielawski.jpg/320px-Ice-Cube_2014-01-09-Chicago-photoby-Adam-Bielawski.jpg",
+    "social_links": "https://en.wikipedia.org/wiki/Ice_Cube",
+    "popularity_score": 62,
+    "created_at": "2024-11-22T13:33:57.566Z",
+    "id": 424725,
+    "additional_data": {
+      "fullName": "Ice Cube",
+      "birthPlace": "Los Angeles, California, U.S.",
+      "organizations": [
+        "Lench Mob Records",
+        "Cube Vision",
+        "Big3"
+      ],
+      "wikiUrl": "https://en.wikipedia.org/wiki/Ice_Cube",
+      "education": "Taft High School Phoenix Institute Of Technology",
+      "years active": "1986–present",
+      "spouse": "Kimberly Woodruff (m. 1992)",
+      "children": "4, including O'Shea Jr.",
+      "relatives": "Del tha Funky Homosapien (cousin)Kam (cousin)",
+      "genres": "West Coast hip hop gangsta rap political hip hop",
+      "labels": "Lench MobPriorityAftermath[1][2]EMIInterscope",
+      "member of": "Mt. Westmore",
+      "formerly of": "C.I.A. N.W.A Da Lench Mob Westside Connection",
+      "website": "icecube.com"
+    }
   }
 ]

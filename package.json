@@ -10,7 +10,8 @@
     "lint": "next lint",
     "build:scripts": "tsc -p tsconfig.scripts.json",
     "fetch:celebrities": "node dist/scripts/fetch_celebrities.js",
-    "fetch:enrich_celebrities": "node dist/scripts/enrich_celebrity_data.js"
+    "fetch:enrich_celebrities": "node dist/scripts/enrich_celebrity_data.js",
+    "fetch:add_enrich_celebrities": "node dist/scripts/add_enrich_celebrity_data.js"
   },
   "dependencies": {
     "@types/node": "20.4.5",
