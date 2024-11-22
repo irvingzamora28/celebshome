@@ -2,6 +2,8 @@ import Image from "next/image";
 import { ICelebrity } from "../../../models/Celebrity";
 import BackButton from "./BackButton";
 import { getZodiacEmoji } from "../../../utils/zodiac";
+import { generateCelebrityMetadata } from "../../../utils/metadata";
+import { Metadata } from 'next';
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -22,9 +24,14 @@ async function getCelebrityProfile(slug: string): Promise<ICelebrity> {
   return response.json();
 }
 
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const resolvedParams = await params;
+  const celebrity = await getCelebrityProfile(resolvedParams.slug);
+  return generateCelebrityMetadata(celebrity);
+}
+
 export default async function CelebrityProfile({ params }: PageProps) {
-  // Await both params
-  const [resolvedParams] = await Promise.all([params]);
+  const resolvedParams = await params;
   const celebrity = await getCelebrityProfile(resolvedParams.slug);
   const birthDate = new Date(celebrity.dateOfBirth);
 
@@ -42,10 +49,11 @@ export default async function CelebrityProfile({ params }: PageProps) {
             <div className="relative h-64 md:h-full md:col-span-1 overflow-hidden">
               <Image
                 src={celebrity.imageUrl}
-                alt={celebrity.name}
+                alt={`Photo of ${celebrity.name}`}
                 fill
                 className="object-cover md:rounded-tl-3xl md:rounded-bl-none"
                 priority
+                sizes="(max-width: 768px) 100vw, 33vw"
               />
             </div>
 
@@ -55,7 +63,7 @@ export default async function CelebrityProfile({ params }: PageProps) {
                 {celebrity.name}
               </h1>
               <div className="flex items-center gap-4">
-                <p className="text-lg opacity-90  md:text-gray-800">
+                <p className="text-lg opacity-90 md:text-gray-800">
                   {celebrity.profession}
                 </p>
               </div>
@@ -67,19 +75,23 @@ export default async function CelebrityProfile({ params }: PageProps) {
               <div className="space-y-2">
                 <h2 className="text-lg font-semibold text-indigo-900">Birth Date</h2>
                 <p className="text-indigo-600">
-                  {birthDate.toLocaleDateString("en-US", {
-                    weekday: "long",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
+                  <time dateTime={celebrity.dateOfBirth}>
+                    {birthDate.toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </time>
                 </p>
               </div>
               <div className="space-y-2">
                 <h2 className="text-lg font-semibold text-indigo-900">Zodiac Sign</h2>
                 <p className="text-indigo-600 flex items-center gap-2">
                   {celebrity.zodiacSign}
-                  <span className="text-2xl">{getZodiacEmoji(celebrity.zodiacSign)}</span>
+                  <span className="text-2xl" aria-label={`${celebrity.zodiacSign} zodiac symbol`}>
+                    {getZodiacEmoji(celebrity.zodiacSign)}
+                  </span>
                 </p>
               </div>
             </div>
@@ -143,6 +155,7 @@ export default async function CelebrityProfile({ params }: PageProps) {
                   href={celebrity.additionalData.wikiUrl as string}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`Read more about ${celebrity.name} on Wikipedia`}
                   className="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 transition-colors"
                 >
                   <svg
@@ -150,6 +163,7 @@ export default async function CelebrityProfile({ params }: PageProps) {
                     className="h-5 w-5"
                     viewBox="0 0 20 20"
                     fill="currentColor"
+                    aria-hidden="true"
                   >
                     <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
                     <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />

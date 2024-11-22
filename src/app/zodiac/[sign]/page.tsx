@@ -1,8 +1,10 @@
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
+import { generateZodiacSignMetadata } from '../../../utils/metadata';
 import ZodiacClientPage from './ZodiacClientPage';
 
 interface PageProps {
-  params: Promise<{ sign: string }>; // Updated to Promise
+  params: Promise<{ sign: string }>;
 }
 
 async function getCelebritiesByZodiac(sign: string) {
@@ -22,11 +24,15 @@ async function getCelebritiesByZodiac(sign: string) {
   return response.json();
 }
 
-export default async function ZodiacPage({ params }: PageProps) {
-  // Await the params object
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const sign = resolvedParams.sign.toLowerCase();
+  return generateZodiacSignMetadata(sign);
+}
 
+export default async function ZodiacSignPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const sign = resolvedParams.sign.toLowerCase();
   const validSigns = [
     'aries',
     'taurus',
@@ -47,6 +53,5 @@ export default async function ZodiacPage({ params }: PageProps) {
   }
 
   const celebrities = await getCelebritiesByZodiac(sign);
-
   return <ZodiacClientPage sign={sign} celebrities={celebrities} />;
 }
