@@ -46,7 +46,7 @@ export async function GET() {
             textAlign: 'center',
           }}
         >
-          Discover Your Favorite Celebrities' Zodiac Signs
+          Discover Your Favorite Celebrities&apos; Zodiac Signs
         </div>
         <div
           style={{
