@@ -11,15 +11,18 @@
     "build:scripts": "tsc -p tsconfig.scripts.json",
     "fetch:celebrities": "node dist/scripts/fetch_celebrities.js",
     "fetch:enrich_celebrities": "node dist/scripts/enrich_celebrity_data.js",
-    "fetch:add_enrich_celebrities": "node dist/scripts/add_enrich_celebrity_data.js"
+    "fetch:add_enrich_celebrities": "node dist/scripts/add_enrich_celebrity_data.js",
+    "migrate:supabase": "node dist/scripts/migrate-to-supabase.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.46.1",
     "@types/node": "20.4.5",
     "@types/react": "18.2.17",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",
     "axios": "^1.6.2",
     "cross-fetch": "^4.0.0",
+    "dotenv": "^16.4.5",
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.12",
     "jsdom": "^25.0.1",
