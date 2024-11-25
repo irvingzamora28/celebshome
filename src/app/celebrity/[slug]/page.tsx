@@ -4,6 +4,7 @@ import BackButton from "./BackButton";
 import { getZodiacEmoji } from "../../../utils/zodiac";
 import { generateCelebrityMetadata } from "../../../utils/metadata";
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -16,6 +17,10 @@ async function getCelebrityProfile(slug: string): Promise<ICelebrity> {
       revalidate: 3600, // Cache for 1 hour
     },
   });
+  
+  if (response.status === 404) {
+    notFound();
+  }
 
   if (!response.ok) {
     throw new Error(`Failed to fetch celebrity profile: ${response.statusText}`);
