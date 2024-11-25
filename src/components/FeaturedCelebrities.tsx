@@ -2,21 +2,42 @@
 
 import { ICelebrity } from '../models/Celebrity';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { getZodiacEmoji } from "../utils/zodiac";
 import { useImageDimensions } from '../hooks/useImageDimensions';
+import { useRouter } from 'next/navigation';
 
-const CelebrityCard = ({ celebrity }: { celebrity: ICelebrity }) => {
+const CelebrityCard = ({ 
+    celebrity, 
+    isLoading,
+    isActiveCard, 
+    onCardClick 
+}: { 
+    celebrity: ICelebrity;
+    isLoading: boolean;
+    isActiveCard: boolean;
+    onCardClick: (celebrity: ICelebrity) => void;
+}) => {
     const dimensions = useImageDimensions(celebrity.imageUrl);
     const aspectRatioClass = dimensions?.isPortrait ? 'aspect-[3/4]' : 'aspect-video';
 
+    const handleClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        if (isLoading) return;
+        onCardClick(celebrity);
+    };
+
     return (
-        <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl overflow-hidden transition-all duration-300 transform hover:-translate-y-2">
-            <Link
-                href={`/celebrity/${encodeURIComponent(celebrity.name)}-birth-${encodeURIComponent(celebrity.dateOfBirth)}`}
-                className="block group"
-            >
+        <div 
+            className={`relative bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl overflow-hidden transition-all duration-300 transform hover:-translate-y-2 ${isLoading ? 'cursor-wait' : 'cursor-pointer'} ${isActiveCard ? 'opacity-50' : ''}`}
+            onClick={handleClick}
+        >
+            {isActiveCard && (
+                <div className="absolute inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-10">
+                    <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            )}
+            <div className="block group">
                 <div className={`relative ${aspectRatioClass} overflow-hidden`}>
                     <Image
                         src={celebrity.imageUrl}
@@ -47,15 +68,23 @@ const CelebrityCard = ({ celebrity }: { celebrity: ICelebrity }) => {
                         </span>
                     </div>
                 </div>
-            </Link>
+            </div>
         </div>
     );
 };
 
 export default function FeaturedCelebrities() {
     const [celebrities, setCelebrities] = useState<ICelebrity[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [isPending, startTransition] = useTransition();
+    const [activeCardId, setActiveCardId] = useState<string | null>(null);
+    const router = useRouter();
+
+    const handleCardClick = (celebrity: ICelebrity) => {
+        setActiveCardId(`${celebrity.name}-${celebrity.dateOfBirth}`);
+        startTransition(() => {
+            router.push(`/celebrity/${encodeURIComponent(celebrity.name)}-birth-${encodeURIComponent(celebrity.dateOfBirth)}`);
+        });
+    };
 
     useEffect(() => {
         const fetchFeaturedCelebrities = async () => {
@@ -71,16 +100,14 @@ export default function FeaturedCelebrities() {
                 setCelebrities(data);
             } catch (error) {
                 console.error('Error fetching featured celebrities:', error);
-                setError('Failed to load featured celebrities');
             } finally {
-                setIsLoading(false);
             }
         };
 
         fetchFeaturedCelebrities();
     }, []);
 
-    if (isLoading) {
+    if (!celebrities.length) {
         return (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[1, 2, 3].map((i) => (
@@ -96,27 +123,23 @@ export default function FeaturedCelebrities() {
         );
     }
 
-    if (error) {
-        return (
-            <div className="text-center text-red-600 py-8">
-                <p>{error}</p>
-            </div>
-        );
-    }
-
-    if (!celebrities.length) {
-        return (
-            <div className="text-center text-gray-600 py-8">
-                <p>No featured celebrities available at the moment.</p>
-            </div>
-        );
-    }
-
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {celebrities.map((celebrity) => (
-                <CelebrityCard key={celebrity.id} celebrity={celebrity} />
-            ))}
+        <div className="container mx-auto px-4 py-8">
+            <h2 className="text-3xl font-bold text-center mb-8 text-indigo-900">Featured Celebrities</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {celebrities.map((celebrity) => {
+                    const cardId = `${celebrity.name}-${celebrity.dateOfBirth}`;
+                    return (
+                        <CelebrityCard 
+                            key={cardId}
+                            celebrity={celebrity}
+                            isLoading={isPending}
+                            isActiveCard={cardId === activeCardId}
+                            onCardClick={handleCardClick}
+                        />
+                    );
+                })}
+            </div>
         </div>
     );
 }
