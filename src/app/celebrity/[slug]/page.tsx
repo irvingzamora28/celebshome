@@ -3,8 +3,9 @@ import { ICelebrity } from "../../../models/Celebrity";
 import BackButton from "./BackButton";
 import { getZodiacEmoji } from "../../../utils/zodiac";
 import { generateCelebrityMetadata } from "../../../utils/metadata";
-import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { ArticleData } from "@/types/article";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -17,19 +18,38 @@ async function getCelebrityProfile(slug: string): Promise<ICelebrity> {
       revalidate: 3600, // Cache for 1 hour
     },
   });
-  
+
   if (response.status === 404) {
     notFound();
   }
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch celebrity profile: ${response.statusText}`);
+    throw new Error(
+      `Failed to fetch celebrity profile: ${response.statusText}`
+    );
   }
 
   return response.json();
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+async function getArticlesByCelebrity(slug: string): Promise<ArticleData[]> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+  console.log(slug);
+  
+  const response = await fetch(`${baseUrl}/api/articles/celebrity/${slug}`);
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch articles by celebrity: ${response.statusText}`
+    );
+  }
+
+  return response.json();
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const celebrity = await getCelebrityProfile(resolvedParams.slug);
   return generateCelebrityMetadata(celebrity);
@@ -39,6 +59,7 @@ export default async function CelebrityProfile({ params }: PageProps) {
   const resolvedParams = await params;
   const celebrity = await getCelebrityProfile(resolvedParams.slug);
   const birthDate = new Date(celebrity.dateOfBirth);
+  const articles = await getArticlesByCelebrity(resolvedParams.slug);
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-indigo-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
@@ -76,7 +97,9 @@ export default async function CelebrityProfile({ params }: PageProps) {
           <div className="p-6 md:p-8 space-y-8">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <h2 className="text-lg font-semibold text-indigo-900 dark:text-indigo-100">Birth Date</h2>
+                <h2 className="text-lg font-semibold text-indigo-900 dark:text-indigo-100">
+                  Birth Date
+                </h2>
                 <p className="text-indigo-600 dark:text-indigo-300">
                   <time dateTime={celebrity.dateOfBirth}>
                     {birthDate.toLocaleDateString("en-US", {
@@ -89,10 +112,15 @@ export default async function CelebrityProfile({ params }: PageProps) {
                 </p>
               </div>
               <div className="space-y-2">
-                <h2 className="text-lg font-semibold text-indigo-900 dark:text-indigo-100">Zodiac Sign</h2>
+                <h2 className="text-lg font-semibold text-indigo-900 dark:text-indigo-100">
+                  Zodiac Sign
+                </h2>
                 <p className="text-indigo-600 dark:text-indigo-300 flex items-center gap-2">
                   {celebrity.zodiacSign}
-                  <span className="text-2xl" aria-label={`${celebrity.zodiacSign} zodiac symbol`}>
+                  <span
+                    className="text-2xl"
+                    aria-label={`${celebrity.zodiacSign} zodiac symbol`}
+                  >
                     {getZodiacEmoji(celebrity.zodiacSign)}
                   </span>
                 </p>
@@ -101,8 +129,12 @@ export default async function CelebrityProfile({ params }: PageProps) {
 
             {celebrity.biography && (
               <div className="space-y-4">
-                <h2 className="text-lg font-semibold text-indigo-900 dark:text-indigo-100">Biography</h2>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{celebrity.biography}</p>
+                <h2 className="text-lg font-semibold text-indigo-900 dark:text-indigo-100">
+                  Biography
+                </h2>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {celebrity.biography}
+                </p>
               </div>
             )}
 
@@ -122,7 +154,10 @@ export default async function CelebrityProfile({ params }: PageProps) {
                       .map(([key, value]) => {
                         const formattedKey = key
                           .split("_")
-                          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() + word.slice(1)
+                          )
                           .join(" ");
 
                         return (
@@ -143,7 +178,9 @@ export default async function CelebrityProfile({ params }: PageProps) {
                               </ul>
                             ) : typeof value === "string" ||
                               typeof value === "number" ? (
-                              <p className="text-gray-700 dark:text-gray-300 text-sm mt-1">{value}</p>
+                              <p className="text-gray-700 dark:text-gray-300 text-sm mt-1">
+                                {value}
+                              </p>
                             ) : null}
                           </div>
                         );
@@ -151,6 +188,26 @@ export default async function CelebrityProfile({ params }: PageProps) {
                   </div>
                 </div>
               )}
+
+            {articles.length > 0 && (
+              <div className="space-y-4">
+                <h2 className="text-lg font-semibold text-indigo-900 dark:text-indigo-100">
+                  Articles Featuring {celebrity.name}
+                </h2>
+                <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1">
+                  {articles.map((article, index) => (
+                    <li key={index} className="text-sm">
+                      <a
+                        href={`/article/${encodeURIComponent(article.title)}`}
+                        className="hover:underline"
+                      >
+                        {article.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {celebrity.additionalData?.wikiUrl && (
               <div className="pt-4 border-t border-gray-200 dark:border-gray-600">

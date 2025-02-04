@@ -33,6 +33,7 @@ export default function RootLayout({
           async
           src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
         />
+        <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

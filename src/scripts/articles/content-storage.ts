@@ -3,16 +3,10 @@ import 'dotenv/config';
 import fs from 'fs/promises';
 import path from 'path';
 import { supabase } from '../../lib/supabase';
+import { ArticleData } from '../../types/article';
 
 
 // src/scripts/articles/content-storage.ts
-interface ArticleData {
-    celebrityName: string; // Changed from celebrityId
-    title: string;
-    content: string;
-    format: 'md' | 'json';
-    sources: string[];
-  }
   
   export async function storeArticle(data: ArticleData) {
     try {
