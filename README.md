@@ -119,6 +119,30 @@ interface ICelebrity {
     - 400: Invalid zodiac sign
     - 500: Server error
 
+## Scripts and Data Files
+
+### Scripts
+- **fetch:celebrities**: Crawls different pages to look for celebrities and fills up `celebrities.json` with only names.
+- **fetch:enrich_celebrities**: Gets the names from `celebrities.json`, crawls the Wikipedia page of each celebrity to get data, and fills up `enriched_celebrities.json`.
+- **fetch:append_to_enrich_celebrities**: Gets the names from `add_celebrities.json` and appends enriched celebrity data to `enriched_celebrities.json`.
+- **fetch:new_enrich_celebrities**: Gets the names from `add_celebrities.json` and creates a new file named `new_enriched_celebrities.json`.
+- **migrate:supabase**: Migrates the data from `enriched_celebrities.json` to the database.
+- **update:supabase**: Takes the data from `update_enriched_celebrities.json` and updates the records in the database by name and date of birth.
+- **add:supabase**: Takes the data from `new_enriched_celebrities.json` and adds the records to the database, avoiding duplicates.
+
+### Data Files
+- **celebrities.json**: Contains only the names of celebrities.
+- **enriched_celebrities.json**: Contains all the celebrities' info, should be up to date.
+- **add_celebrities.json**: Contains the names of celebrities to be added.
+- **new_enriched_celebrities.json**: Contains enriched data to be added to the database.
+- **update_enriched_celebrities.json**: Contains data to update records in the database.
+
+## Process to Update Data
+1. Fill `add_celebrities.json` with only the names of celebrities to be added.
+2. Run `fetch:append_to_enrich_celebrities`.
+3. Run `fetch:new_enrich_celebrities`.
+4. Run `update:supabase`.
+
 ## Prerequisites
 
 - Node.js (v18 or higher)

@@ -1,0 +1,25 @@
+[
+    {
+      "name": "Ashton Kutcher",
+      "date_of_birth": "1978-02-07",
+      "zodiac_sign": "Aquarius",
+      "gender": "Male",
+      "nationality": "American",
+      "profession": "actor",
+      "biography": "Christopher Ashton Kutcher is an American actor, producer and entrepreneur. Kutcher began his acting career portraying Michael Kelso in the Fox sitcom That '70s Show (1998–2006). He made his film debut in the romantic comedy Coming Soon (1999), followed by the comedy film Dude, Where's My Car? (2000), which was a box office success. In 2003, Kutcher starred in the romantic comedies Just Married and My Boss's Daughter. That year, he created and produced the television series Punk'd, also serving as host for the first eight of its ten seasons. Kutcher starred in the science fiction film The Butterfly Effect (2004) and had a voice role in Open Season (2006).",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Ashton_Kutcher_-_2023_-_P060603-652701_%28cropped%29.jpg/320px-Ashton_Kutcher_-_2023_-_P060603-652701_%28cropped%29.jpg",
+      "social_links": "https://en.wikipedia.org/wiki/Ashton_Kutcher",
+      "popularity_score": 50,
+      "created_at": "2025-02-04T11:41:31.584Z",
+      "id": 256295,
+      "additional_data": {
+        "fullName": "Ashton Kutcher",
+        "birthPlace": "Cedar Rapids, Iowa, U.S.",
+        "wikiUrl": "https://en.wikipedia.org/wiki/Ashton_Kutcher",
+        "years active": "1998–present",
+        "spouses": "Demi Moore (m. 2005; div. 2013) Mila Kunis (m. 2015)",
+        "children": "2",
+        "awards": "Full list"
+      }
+    }
+  ]

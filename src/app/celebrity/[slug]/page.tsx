@@ -57,6 +57,7 @@ export default async function CelebrityProfile({ params }: PageProps) {
                 alt={`Photo of ${celebrity.name}`}
                 fill
                 className="object-cover md:rounded-tl-3xl md:rounded-bl-none"
+                style={{ objectPosition: "0 -2rem" }}
                 priority
                 sizes="(max-width: 768px) 100vw, 33vw"
               />

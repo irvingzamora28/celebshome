@@ -12,10 +12,13 @@ create table celebrities (
   biography text,
   image_url text,
   popularity_score numeric,
+  social_links text,
   additional_data jsonb,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   updated_at timestamp with time zone default timezone('utc'::text, now())
 );
+
+ALTER TABLE celebrities ADD CONSTRAINT unique_name_dob UNIQUE (name, date_of_birth);
 
 -- Add indexes for better performance
 create index celebrities_name_idx on celebrities using gin (name gin_trgm_ops);

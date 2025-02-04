@@ -42,13 +42,14 @@ async function migrateToSupabase() {
             biography: celeb.biography,
             image_url: celeb.image_url,
             popularity_score: celeb.popularity_score || 0,
+            social_links: celeb.social_links,
             additional_data: {
               ...celeb.additional_data,
-              social_links: celeb.social_links
             },
             created_at: celeb.created_at || new Date().toISOString(),
             updated_at: new Date().toISOString()
-          }))
+          })),
+          { onConflict: 'name,date_of_birth' }
         );
 
       if (error) {

@@ -11,8 +11,11 @@
     "build:scripts": "tsc -p tsconfig.scripts.json",
     "fetch:celebrities": "node dist/scripts/fetch_celebrities.js",
     "fetch:enrich_celebrities": "node dist/scripts/enrich_celebrity_data.js",
-    "fetch:add_enrich_celebrities": "node dist/scripts/add_enrich_celebrity_data.js",
-    "migrate:supabase": "node dist/scripts/migrate-to-supabase.js"
+    "fetch:append_to_enrich_celebrities": "node dist/scripts/append_to_enrich_celebrity_data.js",
+    "fetch:new_enrich_celebrities": "node dist/scripts/new_enrich_celebrity_data.js",
+    "migrate:supabase": "node dist/scripts/migrate-to-supabase.js",
+    "update:supabase": "node dist/scripts/update_records.js",
+    "add:supabase": "node dist/scripts/add_records.js"
   },
   "dependencies": {
     "@supabase/ssr": "^0.1.0",

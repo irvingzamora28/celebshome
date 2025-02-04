@@ -25617,5 +25617,56 @@
       "formerly of": "C.I.A. N.W.A Da Lench Mob Westside Connection",
       "website": "icecube.com"
     }
+  },
+  {
+    "name": "Justin Baldoni",
+    "date_of_birth": "1984-01-24",
+    "zodiac_sign": "Aquarius",
+    "gender": "Male",
+    "nationality": "American",
+    "profession": "actor",
+    "biography": "Justin Louis Baldoni is an American actor and director. He is best known for playing Rafael Solano on the CW telenovela Jane the Virgin (2014–2019) and for starring in and directing the romantic drama film It Ends with Us (2024). He has also directed Five Feet Apart (2019) and Clouds (2020).",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Justin_Baldoni_at_2015_PaleyFest.jpg/320px-Justin_Baldoni_at_2015_PaleyFest.jpg",
+    "social_links": "https://en.wikipedia.org/wiki/Justin_Baldoni",
+    "popularity_score": 37,
+    "created_at": "2025-02-04T09:36:45.957Z",
+    "id": 390658,
+    "additional_data": {
+      "fullName": "Justin Baldoni",
+      "birthPlace": "Los Angeles, California, U.S.",
+      "organizations": [
+        "Wayfarer Studios"
+      ],
+      "wikiUrl": "https://en.wikipedia.org/wiki/Justin_Baldoni",
+      "years active": "2004–present",
+      "spouse": "Emily Foxler (m. 2013)",
+      "children": "2"
+    }
+  },
+  {
+    "name": "Kim Kardashian",
+    "date_of_birth": "1980-10-21",
+    "zodiac_sign": "Libra",
+    "gender": "Female",
+    "nationality": "American",
+    "profession": "Unknown",
+    "biography": "Kimberly Noel Kardashian is an American media personality, socialite, and businesswoman. She first gained media attention as a friend and stylist of Paris Hilton, but received wider notice after the sex tape Kim Kardashian, Superstar, which she filmed in 2003 with her then-boyfriend Ray J, was released in 2007. Later that year, she and her family began to appear on the E! reality television series Keeping Up with the Kardashians, which aired until 2021. Its success led to the formation of several spin-offs, including Kourtney and Kim Take New York (2011–2012), Kourtney and Kim Take Miami (2009–2013), and a successor show, Hulu's The Kardashians (2022–present).",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Kim_Kardashian_West_2014.jpg/320px-Kim_Kardashian_West_2014.jpg",
+    "social_links": "https://en.wikipedia.org/wiki/Kim_Kardashian",
+    "popularity_score": 100,
+    "created_at": "2025-02-04T10:19:14.301Z",
+    "id": 820440,
+    "additional_data": {
+      "fullName": "Kim Kardashian",
+      "birthPlace": "Los Angeles, California, U.S.",
+      "wikiUrl": "https://en.wikipedia.org/wiki/Kim_Kardashian",
+      "other names": "Kim Kardashian WestKim K",
+      "years active": "2003–present",
+      "television": "Keeping Up with the Kardashians Kourtney and Kim Take Miami Kourtney and Kim Take New York The Kardashians",
+      "spouses": "Damon Thomas (m. 2000; div. 2004) Kris Humphries (m. 2011; div. 2013) Kanye West (m. 2014; div. 2022)",
+      "children": "4, including North West[1]",
+      "parents": "Robert Kardashian (father)Kris Jenner (mother)",
+      "family": "Kardashian family"
+    }
   }
 ]
