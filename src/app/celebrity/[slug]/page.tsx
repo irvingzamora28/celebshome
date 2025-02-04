@@ -41,16 +41,14 @@ export default async function CelebrityProfile({ params }: PageProps) {
   const birthDate = new Date(celebrity.dateOfBirth);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-indigo-50 to-indigo-100">
+    <main className="min-h-screen bg-gradient-to-b from-indigo-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="mb-8">
           <BackButton />
         </div>
 
-        <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden">
-          {/* Desktop Grid Layout */}
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden">
           <div className="relative md:grid md:grid-cols-3 md:items-center">
-            {/* Image Section */}
             <div className="relative h-64 md:h-full md:col-span-1 overflow-hidden">
               <Image
                 src={celebrity.imageUrl}
@@ -63,13 +61,12 @@ export default async function CelebrityProfile({ params }: PageProps) {
               />
             </div>
 
-            {/* Text Overlay Section */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 text-white md:relative md:col-span-2 md:py-12 md:px-8 md:bg-indigo-100 md:backdrop-blur-md md:rounded-tr-3xl">
-              <h1 className="text-4xl md:text-5xl font-bold mb-2 md:text-indigo-900 md:text-left">
+            <div className="absolute bottom-0 left-0 right-0 p-6 text-white md:relative md:col-span-2 md:py-12 md:px-8 md:bg-indigo-100 dark:md:bg-gray-700/50 md:backdrop-blur-md md:rounded-tr-3xl">
+              <h1 className="text-4xl md:text-5xl font-bold mb-2 md:text-indigo-900 dark:md:text-indigo-100 md:text-left">
                 {celebrity.name}
               </h1>
               <div className="flex items-center gap-4">
-                <p className="text-lg opacity-90 md:text-gray-800">
+                <p className="text-lg opacity-90 md:text-gray-800 dark:md:text-gray-200">
                   {celebrity.profession}
                 </p>
               </div>
@@ -79,8 +76,8 @@ export default async function CelebrityProfile({ params }: PageProps) {
           <div className="p-6 md:p-8 space-y-8">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <h2 className="text-lg font-semibold text-indigo-900">Birth Date</h2>
-                <p className="text-indigo-600">
+                <h2 className="text-lg font-semibold text-indigo-900 dark:text-indigo-100">Birth Date</h2>
+                <p className="text-indigo-600 dark:text-indigo-300">
                   <time dateTime={celebrity.dateOfBirth}>
                     {birthDate.toLocaleDateString("en-US", {
                       weekday: "long",
@@ -92,8 +89,8 @@ export default async function CelebrityProfile({ params }: PageProps) {
                 </p>
               </div>
               <div className="space-y-2">
-                <h2 className="text-lg font-semibold text-indigo-900">Zodiac Sign</h2>
-                <p className="text-indigo-600 flex items-center gap-2">
+                <h2 className="text-lg font-semibold text-indigo-900 dark:text-indigo-100">Zodiac Sign</h2>
+                <p className="text-indigo-600 dark:text-indigo-300 flex items-center gap-2">
                   {celebrity.zodiacSign}
                   <span className="text-2xl" aria-label={`${celebrity.zodiacSign} zodiac symbol`}>
                     {getZodiacEmoji(celebrity.zodiacSign)}
@@ -104,15 +101,15 @@ export default async function CelebrityProfile({ params }: PageProps) {
 
             {celebrity.biography && (
               <div className="space-y-4">
-                <h2 className="text-lg font-semibold text-indigo-900">Biography</h2>
-                <p className="text-gray-700 leading-relaxed">{celebrity.biography}</p>
+                <h2 className="text-lg font-semibold text-indigo-900 dark:text-indigo-100">Biography</h2>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{celebrity.biography}</p>
               </div>
             )}
 
             {celebrity.additionalData &&
               Object.entries(celebrity.additionalData).length > 0 && (
                 <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-indigo-900">
+                  <h2 className="text-lg font-semibold text-indigo-900 dark:text-indigo-100">
                     Additional Information
                   </h2>
                   <div className="grid md:grid-cols-2 gap-6">
@@ -131,13 +128,13 @@ export default async function CelebrityProfile({ params }: PageProps) {
                         return (
                           <div
                             key={key}
-                            className="bg-indigo-50 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                            className="bg-indigo-50 dark:bg-gray-700 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow"
                           >
-                            <h3 className="font-medium text-indigo-700">
+                            <h3 className="font-medium text-indigo-700 dark:text-indigo-300">
                               {formattedKey}
                             </h3>
                             {Array.isArray(value) ? (
-                              <ul className="list-disc list-inside text-gray-600 space-y-1 mt-1">
+                              <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 mt-1">
                                 {value.map((item, index) => (
                                   <li key={index} className="text-sm">
                                     {item}
@@ -146,7 +143,7 @@ export default async function CelebrityProfile({ params }: PageProps) {
                               </ul>
                             ) : typeof value === "string" ||
                               typeof value === "number" ? (
-                              <p className="text-gray-700 text-sm mt-1">{value}</p>
+                              <p className="text-gray-700 dark:text-gray-300 text-sm mt-1">{value}</p>
                             ) : null}
                           </div>
                         );
@@ -156,13 +153,13 @@ export default async function CelebrityProfile({ params }: PageProps) {
               )}
 
             {celebrity.additionalData?.wikiUrl && (
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-600">
                 <a
                   href={celebrity.additionalData.wikiUrl as string}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`Read more about ${celebrity.name} on Wikipedia`}
-                  className="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 transition-colors"
+                  className="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

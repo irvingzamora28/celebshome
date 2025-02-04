@@ -29,12 +29,12 @@ const CelebrityCard = ({
 
     return (
         <div 
-            className={`relative bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl overflow-hidden transition-all duration-300 transform hover:-translate-y-2 ${isLoading ? 'cursor-wait' : 'cursor-pointer'} ${isActiveCard ? 'opacity-50' : ''}`}
+            className={`relative ${isLoading ? 'cursor-wait' : 'cursor-pointer'} bg-white dark:bg-gray-800/50 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl overflow-hidden transition-all duration-300 transform hover:-translate-y-2 ${isActiveCard ? 'opacity-50' : ''}`}
             onClick={handleClick}
         >
             {isActiveCard && (
-                <div className="absolute inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-10">
-                    <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                <div className="absolute inset-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm flex items-center justify-center z-10">
+                    <div className="w-8 h-8 border-4 border-indigo-500 dark:border-indigo-300 border-t-transparent rounded-full animate-spin"></div>
                 </div>
             )}
             <div className="block group">
@@ -49,21 +49,21 @@ const CelebrityCard = ({
                 </div>
                 <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-xl font-bold text-indigo-900 line-clamp-1">
+                        <h3 className="text-xl font-bold text-indigo-900 dark:text-indigo-100 line-clamp-1">
                             {celebrity.name}
                         </h3>
                         <span className="text-3xl flex-shrink-0 ml-2" title={celebrity.zodiacSign}>
                             {getZodiacEmoji(celebrity.zodiacSign)}
                         </span>
                     </div>
-                    <p className="text-indigo-600 text-sm mb-2 font-medium line-clamp-1">
+                    <p className="text-indigo-600 dark:text-indigo-300 text-sm mb-2 font-medium line-clamp-1">
                         {celebrity.profession === 'Unknown' ? '' : celebrity.profession}
                     </p>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                    <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3">
                         {celebrity.biography}
                     </p>
                     <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-gray-500 dark:text-gray-300">
                             Born: {new Date(celebrity.dateOfBirth).toLocaleDateString()}
                         </span>
                     </div>
@@ -111,11 +111,11 @@ export default function FeaturedCelebrities() {
         return (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[1, 2, 3].map((i) => (
-                    <div key={i} className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden animate-pulse">
-                        <div className="relative aspect-[3/4] bg-gray-200"></div>
+                    <div key={i} className="bg-white/80 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden animate-pulse">
+                        <div className="relative aspect-[3/4] bg-gray-200 dark:bg-gray-700"></div>
                         <div className="p-6 space-y-4">
-                            <div className="h-6 bg-gray-200 rounded w-3/4"></div>
-                            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
                         </div>
                     </div>
                 ))}
@@ -125,7 +125,7 @@ export default function FeaturedCelebrities() {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <h2 className="text-3xl font-bold text-center mb-8 text-indigo-900">Featured Celebrities</h2>
+            <h2 className="text-3xl font-bold text-center mb-8 text-indigo-900 dark:text-indigo-100">Featured Celebrities</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {celebrities.map((celebrity) => {
                     const cardId = `${celebrity.name}-${celebrity.dateOfBirth}`;

@@ -22,16 +22,16 @@ export default function ZodiacGrid() {
                 <Link
                     key={sign.name}
                     href={`/zodiac/${sign.name.toLowerCase()}`}
-                    className="group bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-6"
+                    className="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-6"
                 >
                     <div className="text-center">
                         <div className="text-5xl mb-3 transition-transform duration-300 group-hover:scale-110">
                             {sign.emoji}
                         </div>
-                        <h3 className="text-xl font-bold text-indigo-900 mb-2">
+                        <h3 className="text-xl font-bold text-indigo-900 dark:text-indigo-100 mb-2">
                             {sign.name}
                         </h3>
-                        <p className="text-sm text-indigo-600 font-medium">
+                        <p className="text-sm text-indigo-600 dark:text-indigo-300 font-medium">
                             {sign.period}
                         </p>
                     </div>

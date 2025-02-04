@@ -21,7 +21,6 @@ export default function SearchBar() {
         return;
       }
 
-      // Check cache first
       if (searchCache.has(trimmedQuery)) {
         setResults(searchCache.get(trimmedQuery)!);
         return;
@@ -33,9 +32,7 @@ export default function SearchBar() {
         if (response.ok) {
           const data = await response.json();
           setResults(data);
-          // Cache the results
           searchCache.set(trimmedQuery, data);
-          // Keep cache size reasonable
           if (searchCache.size > 50) {
             const keys = Array.from(searchCache.keys());
             if (keys.length > 0) {
@@ -50,7 +47,6 @@ export default function SearchBar() {
       }
     };
 
-    // Increase debounce time slightly for better performance
     const debounceTimer = setTimeout(searchCelebrities, 400);
     return () => clearTimeout(debounceTimer);
   }, [query, searchCache]);
@@ -64,20 +60,19 @@ export default function SearchBar() {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setShowResults(true)}
           placeholder="Search celebrities..."
-          className="w-full px-6 py-4 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border-2 border-indigo-100 focus:border-indigo-300 focus:ring-2 focus:ring-indigo-200 focus:outline-none transition-all text-lg text-slate-600"
+          className="w-full px-6 py-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-lg border-2 border-indigo-100 dark:border-indigo-900 focus:border-indigo-300 dark:focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-700 focus:outline-none transition-all text-lg text-slate-600 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500"
         />
         {isLoading && (
           <div className="absolute right-4 top-1/2 -translate-y-1/2">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600 dark:border-indigo-400"></div>
           </div>
         )}
       </div>
 
-      {/* Results dropdown */}
       {showResults && (query.trim() !== '') && (
         <div 
-          className="absolute z-50 w-full mt-2 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-indigo-100 max-h-96 overflow-y-auto"
-          onMouseDown={(e) => e.preventDefault()} // Prevent input blur
+          className="absolute z-50 w-full mt-2 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-2xl shadow-xl border border-indigo-100 dark:border-indigo-900 max-h-96 overflow-y-auto"
+          onMouseDown={(e) => e.preventDefault()}
         >
           {results.length > 0 ? (
             <div className="p-2">
@@ -85,10 +80,10 @@ export default function SearchBar() {
                 <Link
                   key={celebrity.id}
                   href={`/celebrity/${encodeURIComponent(celebrity.name)}-birth-${encodeURIComponent(celebrity.dateOfBirth)}`}
-                  className="flex items-center gap-4 p-3 hover:bg-indigo-50 rounded-xl transition-colors"
+                  className="flex items-center gap-4 p-3 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-xl transition-colors"
                   onClick={() => setShowResults(false)}
                 >
-                  <div className="relative w-12 h-12 h flex-shrink-0">
+                  <div className="relative w-12 h-12 flex-shrink-0">
                     <Image
                       src={celebrity.imageUrl}
                       alt={celebrity.name}
@@ -98,8 +93,8 @@ export default function SearchBar() {
                     />
                   </div>
                   <div className="flex-grow">
-                    <h3 className="font-semibold text-indigo-900">{celebrity.name}</h3>
-                    <p className="text-sm text-indigo-600">{celebrity.profession}</p>
+                    <h3 className="font-semibold text-indigo-900 dark:text-indigo-100">{celebrity.name}</h3>
+                    <p className="text-sm text-indigo-600 dark:text-indigo-300">{celebrity.profession}</p>
                   </div>
                   <div className="text-2xl" title={celebrity.zodiacSign}>
                     {getZodiacEmoji(celebrity.zodiacSign)}
@@ -108,14 +103,13 @@ export default function SearchBar() {
               ))}
             </div>
           ) : (
-            <div className="p-4 text-center text-gray-500">
+            <div className="p-4 text-center text-gray-500 dark:text-gray-400">
               No celebrities found
             </div>
           )}
         </div>
       )}
 
-      {/* Backdrop */}
       {showResults && (
         <div 
           className="fixed inset-0 z-40"
