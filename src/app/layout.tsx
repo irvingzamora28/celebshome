@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/react";
+import CookieConsent from '@/components/CookieConsent';
+import Navbar from '@/components/Navbar';
 import "./globals.css";
 
 const geistSans = localFont({
@@ -26,10 +28,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          async
+          src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Navbar />
         {children}
+        <CookieConsent />
         <Analytics />
       </body>
     </html>
