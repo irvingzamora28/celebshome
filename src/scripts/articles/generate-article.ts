@@ -10,7 +10,7 @@ program
   .requiredOption('-n, --name <string>', 'Celebrity name')
   .option('-m, --max-articles <number>', 'Max news articles to process', '5')
   .option('-o, --output <type>', 'Output format (md|json)', 'md')
-  .option('-f, --file', 'Use file instead of API', true)
+  .option('-f, --file', 'Use file instead of API', false)
   .parse(process.argv);
 
 const options = program.opts();
